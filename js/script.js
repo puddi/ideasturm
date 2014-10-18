@@ -1,11 +1,6 @@
 $(document).ready(function() {
-<<<<<<< HEAD
-	if ($.cookie('loginID') == undefined) {
-		//$('#ulNav li').toggleClass('noShow')
-=======
 	if (isLoggedIn()) {
 		$('#ulNav li').toggleClass('noShow')
->>>>>>> beecc59fb49cde625bf2b357bcbac336ad07937d
 	}
 	
 	$('#browseButton').click(loadBrowse);
@@ -16,19 +11,6 @@ $(document).ready(function() {
 	$("#mainSubmitButton").click(submitIdea);
 	$('#logInButton').click(login);
 	$('#logOutButton').click(logout);
-<<<<<<< HEAD
-	$('#signUpButton').click(signup);
-
-	$('#mainIdeaField').click(function() {
-		if ($(this).text() == 'Title') {
-			$(this).text('');
-		}
-	});
-	$('#mainIdeaFieldDescription').click(function() {
-		if ($(this).text() == 'Description') {
-			$(this).text('');
-		}
-=======
 	$('#signUpButton').click(function() {
 		$('#login').slideUp(400, function() {
 			if ($('#signUp').css('display') == 'none') {
@@ -52,7 +34,6 @@ $(document).ready(function() {
 				$('#signUp').slideUp();
 			}
 		});
->>>>>>> beecc59fb49cde625bf2b357bcbac336ad07937d
 	});
 	$('#loginButton').click(function() {
 		$('#signUp').slideUp(400, function() {	
@@ -73,16 +54,7 @@ $(document).ready(function() {
 			}
 		});	
 	});
-<<<<<<< HEAD
-
-
-	/* $('#content').append($('<div id="blurb">').append(
-			$('<p>').text("Ideas are awesome. Share yours with the world.")
-		)
-	); */
-=======
 	loadSubmit();
->>>>>>> beecc59fb49cde625bf2b357bcbac336ad07937d
 });
 
 var $pastState;
