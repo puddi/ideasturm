@@ -5,6 +5,7 @@ body {
 	margin: 0;
 }
 
+
 #headNav {
 	width: 100%;
 	height: 60px;
@@ -40,7 +41,7 @@ body {
 	padding: 0 7px;
 }
 
-#ulNav li a, #blurb a  {
+#headNav a, #blurb a {
 	color: #CCC;
 	text-decoration: none;
 	transition: all .3s;
@@ -51,10 +52,16 @@ body {
 	color: #AAA;
 }
 
-#content {
+#contentBG {
 	width: 100%;
 	height: 100%;
 	position: relative;
+	background-image: url(../assets/home.jpg);
+	background-size: cover;
+}
+
+#content {
+	padding-top: 60px;
 }
 
 #blurb {
@@ -114,3 +121,37 @@ body {
 	padding-left: 3px;
 	padding-right: 20px;
 }
+
+.noShow {
+	display: none !important;
+}
+
+/* Browse section css styles*/
+#browse {
+	position: absolute;
+}
+
+#browseFilters {
+	width: 100%;
+	background-color: #FFFFFF;
+	opacity: 0.7;
+	margin-top: 0;
+}
+
+#browseFilters h1{
+	text-align: center;
+	margin: 0;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+
+#browseFilters p{
+	text-align: center;
+	padding-bottom: 0.5em;
+	margin: 10px;
+}
+
+#browseIdeas {
+	width: 100%;
+}
+/** Replace these style rules with the proper div that this talks about, it will come from the .js file. **/
