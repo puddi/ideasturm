@@ -364,6 +364,7 @@ function logout() {
     
 // Returns true if user is logged in, false otherwise
 function isLoggedIn() {
+	return true;
 	if ($.cookie("loginStatus") != null) {
 		return true;
 	}
