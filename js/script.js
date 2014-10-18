@@ -161,6 +161,7 @@ function submitIdea() {
         },
         error: function (msg) {
         	console.log("Idea FAILED to submit :(");
+        	console.log(msg);
         }
 	});
 };
@@ -170,9 +171,9 @@ function searchIdea() {
 	$.ajax({
 		type: "POST",
 		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/SearchIdeas",
-		data: '{ "keywords":"' + $('#mainSearchField').val() +'"}',
+		data: '{}',
 		contentType: "application/json; charset=utf-8",
-        dataType: "json",
+        dataType: "jsonp",
         success: function (msg) {
         	console.log("Search succeeded");
         },
@@ -187,9 +188,10 @@ function getAllIdeas() {
 	$.ajax({
 		type: "POST",
 		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/GetAllIdeas",
-		data: '{ "GetIdeas":"true"}',
+		//data: '{"GetIdeas":"true"}',
+		data: '{}',
 		contentType: "application/json; charset=utf-8",
-        dataType: "json",
+        dataType: "jsonp",
         success: function (msg) {
         	console.log("Get all ideas succeeded" + msg);
         	return $.ajax.response();
@@ -208,7 +210,7 @@ function favorite() {
     		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/Favorite",
     		data: '{ "IdeaName":"' +  +'"}',
     		contentType: "application/json; charset=utf-8",
-            dataType: "json",
+            dataType: "jsonp",
             success: function (msg) {
             	console.log("Favorite succeeded");
             },
@@ -229,7 +231,7 @@ function getFavorites() {
     		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/GetFavorites",
     		data: '{ "user":"' +  +'"}',
     		contentType: "application/json; charset=utf-8",
-            dataType: "json",
+            dataType: "jsonp",
             success: function (msg) {
             	console.log("Get favorites succeeded");
             },
