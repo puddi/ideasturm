@@ -7,6 +7,7 @@ $(document).ready(function() {
 	
 	$('#browseButton').click(loadBrowse);
 	$('#headNav h1 a').click(loadSubmit);
+	$('#backButton').click(loadBack);
 	$("#mainSubmitButton").click(submitIdea);
 	$('#logInButton').click(login);
 	$('#logOutButton').click(logout);
@@ -16,7 +17,7 @@ $(document).ready(function() {
 	); */
 });
 
-
+var $pastState;
 
 function loadSubmit() {
 	$('#content').fadeOut(300, function() {
@@ -24,7 +25,6 @@ function loadSubmit() {
 		$('#content').append($('<div>').attr('id', 'blurb').html('<p>Ideas are awesome. Share yours with the world.</p><div id="mainIdeaField" contenteditable="true"></div><p><a href="#"><span id="mainSubmitButton">Submit</span></a></p>')
 		).fadeIn(300);
 	});
-	
 }
 
 function loadBrowse() {
@@ -36,10 +36,31 @@ function loadBrowse() {
 		$results.append($('<div id="browseFilters">').html('<div id="searchTags" contenteditable="true">Search by Keyword or Hashtag</div><div id="searchAuthor" contenteditable="true">Search by Idea Creator</div><div id="sortIdeas">Sort Ideas</div><div id=filterSearch>Filter</div>'));
 		$tiles = $('<div id="browseIdeas">');
 		getAllIdeas();
-		for (var i = 0; i < 5; ++i) {
-			$tiles.append(createBox(i, i, i, i, i));
+		for (var i = 0; i < 20; ++i) {
+			$res = createBox(i, i, i, i, i);
+			$res.click(function() {
+				$pastState = $('#content').children().clone(true, true);
+				loadIndividualIdea('url(./assets/avatartest.png)', 'testname', 'testtitle', 'testdescription', 'blah');
+			})
+			$tiles.append($res);
 		}
 		$('#content').append($results.append($tiles)).fadeIn(300);
+	});
+}
+
+function loadIndividualIdea(imageInfo, user, name, title, description, data) {
+	$('#content').fadeOut(300, function() {
+		$('#content').empty().append(createIndividualIdea(imageInfo, user, name, title, description));
+		$('#content').fadeIn(300);
+		$('#backNav li').toggleClass('noShow');
+	});
+}
+
+function loadBack() {
+	$('#content').fadeOut(300, function() {
+		$('#content').empty().append($pastState);
+		$('#content').fadeIn(300);
+		$('#backNav li').toggleClass('noShow');
 	});
 }
 
@@ -49,7 +70,10 @@ var $ideaTemplate = $('<div>').addClass('ideaBoxTemplate')
 	.append($('<hr>'))
 	.append($('<p>').addClass('stats').html('<a href="#"><i class="fa fa-star-o"></i><span class="favorites">test</span></a> <i class="fa fa-comments"></i><span class="comments">test</span> <i class="fa fa-bolt"></i><span class="implementations">test</span>'));
 
-var $
+var $commentTemplate = $('<div>').addClass('comment').html('<div class="avatar"><div class="avatarDiv"></div><p class="name"></p><p class="info">on 10/10/16</p></div><div class="commentText"></div>');
+
+var $individualIdeaTemplate = $('<div id="individualIdea">').html('<div id="ideaInfo"><div class="title"><p></p></div><div class="author"><div class="avatarDiv"></div><p>by: <span>author</span></p></div><p class="description"></p></div><hr><div id="ideaOptions"><p class="commentsOption">Show comments</p><p class="implementationsOption">Show implementations</p></div><div id="ideaFeedback"></div><br style="clear:both;">');
+
 function createBox(title, author, fav, com, imp) {
 	var $temp = $ideaTemplate.clone();
 	$temp.find('.title').text(title);
@@ -57,6 +81,25 @@ function createBox(title, author, fav, com, imp) {
 	$temp.find('.favorites').text(fav);
 	$temp.find('.comments').text(com);
 	$temp.find('.implementations').text(imp);
+	return $temp;
+}
+
+function createComment(avatarInfo, name, date, text) {
+	var $temp = $commentTemplate.clone();
+	$temp.find('.avatarDiv').css('background-image', avatarInfo);
+	$temp.find('.name').text(name);
+	$temp.find('.info').text(date);
+	$temp.find('.commentText').text(text);
+	return $temp;
+}
+
+function createIndividualIdea(avatarInfo, user, title, description, commentData) {
+	var $temp = $individualIdeaTemplate.clone();
+	$temp.find('.title p').text(title);
+	$temp.find('.author .avatarDiv').css('background-image', avatarInfo);
+	$temp.find('.author span').text(user);
+	$temp.find('.description').text(description);
+	// for each comment data do something w/ createComment();
 	return $temp;
 }
 
@@ -239,17 +282,3 @@ $(function () {
     
 });
 */
-
-
-$('#content').css({
-	'background-image': 'url(assets/home.jpg)',
-	'background-size': 'cover',
-});
-$('#blurb').append($('<div id="yadayada">').css('text-align', 'center'));
-for (var i = 1; i < 5; i++) {
-	$('#yadayada').append(createBox("hello", "author", "543534", "43", "99"));	
-}
-/* $('#content').append($('<div id="blurb">').append(
-		$('<p>').text("Ideas are awesome. Share yours with the world.")
-	)
-); */
