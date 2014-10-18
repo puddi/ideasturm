@@ -3,17 +3,36 @@ $(document).ready(function() {
 		$('#ulNav li').toggleClass('noShow')
 	}
 	
-
-	
 	$('#browseButton').click(loadBrowse);
 	$('#sortIdeasButton').click(getIdeaByTag);
 	$('#headNav h1 a').click(loadSubmit);
 	$('#backButton').click(loadBack);
+	$('#profileButton').click(loadProfile);
 	$("#mainSubmitButton").click(submitIdea);
 	$('#logInButton').click(login);
 	$('#logOutButton').click(logout);
+<<<<<<< HEAD
 
 	
+=======
+	$('#mainIdeaField').click(function() {
+		if ($(this).text() == 'Title') {
+			$(this).text('');
+		}
+	});
+	$('#mainIdeaFieldDescription').click(function() {
+		if ($(this).text() == 'Description') {
+			$(this).text('');
+		}
+	});
+	$('#mainIdeaFieldTags').click(function() {
+		if ($(this).text() == 'Tags, comma-separated') {
+			$(this).text('');
+		}
+	});
+
+
+>>>>>>> d3308d130f3ec7da345137c75398e294e7864633
 	/* $('#content').append($('<div id="blurb">').append(
 			$('<p>').text("Ideas are awesome. Share yours with the world.")
 		)
@@ -48,6 +67,16 @@ function loadBrowse() {
 			$tiles.append($res);
 		}
 		$('#content').append($results.append($tiles)).fadeIn(300);
+		$('#searchTags').click(function() {
+			if ($(this).text() == 'Search by Keyword or Hashtag') {
+				$(this).text('');
+			}
+		});
+		$('#searchAuthor').click(function() {
+			if ($(this).text() == 'Search by Idea Creator') {
+				$(this).text('');
+			}
+		});
 	});
 }
 
@@ -67,6 +96,13 @@ function loadBack() {
 	});
 }
 
+function loadProfile() {
+	$('#content').fadeOut(300, function() {
+		$('#content').empty().append(createProfile($.cookie("userID")));
+		$('#content').fadeIn(300);
+	});
+}
+
 var $ideaTemplate = $('<div>').addClass('ideaBoxTemplate')
 	.append($('<p>').addClass('title'))
 	.append($('<p>').addClass('author').html('by: <span></span>'))
@@ -75,7 +111,15 @@ var $ideaTemplate = $('<div>').addClass('ideaBoxTemplate')
 
 var $commentTemplate = $('<div>').addClass('comment').html('<div class="avatar"><div class="avatarDiv"></div><p class="name"></p><p class="info">on 10/10/16</p></div><div class="commentText"></div>');
 
-var $individualIdeaTemplate = $('<div id="individualIdea">').html('<div id="ideaInfo"><div class="title"><p></p></div><div class="author"><div class="avatarDiv"></div><p>by: <span>author</span></p></div><p class="description"></p></div><hr><div id="ideaOptions"><p class="commentsOption">Show comments</p><p class="implementationsOption">Show implementations</p></div><div id="ideaFeedback"></div><br style="clear:both;">');
+var $individualIdeaTemplate = $('<div id="individualIdea">').html('<div id="ideaInfo"><div class="title"><p></p></div><div class="author"><div class="avatarDiv"></div><p>by: <span>author</span></p></div><p class="description"></p></div><hr><div id="ideaOptions"><p class="commentsOption">Show comments</p><p class="implementationsOption">Show implementations</p></div><div id="ideaFeedback"></div>');
+
+var $profileTemplate = $('<div id="profile">').html('<div class="avatar"><div class="avatarDiv"></div><h2>name goes here</h2></div><hr><div id="options"><p>Ideas</p><p>Comments</p><p class="lastchild">Implementations</p></div><div id="stuffThatActuallyGoesHere"><br style="clear:both;"></div>');
+
+
+function createProfile(userID) {
+	// get profile information w/ ajax
+	var $temp = $profileTemplate.clone();
+}
 
 function createBox(title, author, fav, com, imp) {
 	var $temp = $ideaTemplate.clone();
@@ -93,6 +137,7 @@ function createComment(avatarInfo, name, date, text) {
 	$temp.find('.name').text(name);
 	$temp.find('.info').text(date);
 	$temp.find('.commentText').text(text);
+	$temp.append('<br style="clear:both;">');
 	return $temp;
 }
 
@@ -102,6 +147,7 @@ function createIndividualIdea(avatarInfo, user, title, description, commentData)
 	$temp.find('.author .avatarDiv').css('background-image', avatarInfo);
 	$temp.find('.author span').text(user);
 	$temp.find('.description').text(description);
+	$temp.find('#ideaFeedback').html(createComment(avatarInfo, 'testCom', '10/10/10/', 'You know this idea sucks'));
 	// for each comment data do something w/ createComment();
 	return $temp;
 }
