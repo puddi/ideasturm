@@ -128,7 +128,7 @@ function loadBrowse() {
 		$results.append($('<div id="browseFilters">').html('<div id="searchTags" contenteditable="true">Search by Keyword or Hashtag</div><div id="searchAuthor" contenteditable="true">Search by Idea Creator</div><div id="sortSearch" onclick="getIdeaByTag"><a href="#" id="sortIdeasButton">Sort by <span id="sortingMetric">time</a> <i class="fa fa-arrow-down"></i></a><ul><li>favorites</li><li>time</li><li>comments</li></ul></div><div id="filterSearch"><a href="#">Filter</a></div>'));
 		$tiles = $('<div id="browseIdeas">');
 		var ideaList = getAllIdeas();
-		console.log(ideaList);
+		console.log(ideaList["Name"]);
 		
 		$.each(ideaList, function() {
 			var id = ideaList[key];
@@ -288,9 +288,8 @@ function getIdeaByName() {
 		contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (msg) {
-        	var xmlDoc = $.parseXML($.ajax.getResponse());
-        	var $xml = $(xmlDoc);
-        	var json = $.parseJSON($xml.find("anyType"));
+        	var json = $.parseJSON(msg);
+        	console.log(msg)
         	console.log("Search succeeded");
         	return json["#text"];
         },
@@ -329,7 +328,7 @@ function getAllIdeas() {
         success: function (msg) {
         	console.log($.parseJSON(msg["d"]));
         	console.log("Get all ideas succeeded");
-        	return $.parseJSON(msg["d"]);
+        	return msg["d"];
         },
         error: function (msg) {
         	console.log(msg);
