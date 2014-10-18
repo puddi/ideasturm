@@ -2,8 +2,14 @@ $(document).ready(function() {
 	if ($.cookie('loginID') == undefined) {
 		$('#ulNav li').toggleClass('noShow')
 	}
+	
+
+	
 	$('#browseButton').click(loadBrowse);
 	$('#headNav h1 a').click(loadSubmit);
+	$("#mainIdeaButton").click(submitIdea);
+	$('#logInButton').click(login);
+	$('#logOutButton').click(logout);
 	/* $('#content').append($('<div id="blurb">').append(
 			$('<p>').text("Ideas are awesome. Share yours with the world.")
 		)
@@ -27,6 +33,7 @@ function loadBrowse() {
 		$results = $('<div id="browse">').css('text-align', 'center');
 		$results.append($('<div id="browseFilters">').html('<h1>Choose a Category</h1><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et </p>'));
 		$tiles = $('<div id="browseIdeas">');
+		getAllIdeas();
 		for (var i = 0; i < 5; ++i) {
 			$tiles.append(createBox(i, i, i, i, i));
 		}
@@ -51,142 +58,137 @@ function createBox(title, author, fav, com, imp) {
 	return $temp;
 }
 
-$(document).ready(function() {
-	console.log('Yup, we loaded');
-	
-	jQuery.fn.extend({
-
-	    // Submit idea to backend
-	    submitIdea: function() {
-	    	$.ajax({
-	    		type: "POST",
-	    		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/CreateIdea",
-	    		data: '{ "IdeaName":"' + $('#mainIdeaField').val() + '","IdeaDate":"today"' + '"}',
-	    		contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (msg) {
-                	console.log("Idea submitted");
-                },
-                error: function (msg) {
-                	console.log("Idea FAILED to submit :(");
-                }
-	    	});
-	    },
-	    
-	    // Search for idea with name containing keyword(s)
-	    searchIdea: function() {
-	    	$.ajax({
-	    		type: "POST",
-	    		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/SearchIdeas",
-	    		data: '{ "keywords":"' + $('#mainSearchField').val() +'"}',
-	    		contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (msg) {
-                	console.log("Search succeeded");
-                },
-                error: function (msg) {
-                	console.log("Search failed");
-                }
-	    	});
-	    },
-	    
-	    // Fetch all ideas
-	    getAllIdeas: function() {
-	    	$.ajax({
-	    		type: "POST",
-	    		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/GetAllIdeas",
-	    		data: '{ "GetIdeas":"true"}',
-	    		contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (msg) {
-                	console.log("Get all ideas succeeded");
-                },
-                error: function (msg) {
-                	console.log("Get all ideas failed");
-                }
-	    	});
-	    },
-	    
-	    // Mark an idea as a favorite
-	    favorite: function() {
-	    	if ($.isLoggedIn()) {
-		    	$.ajax({
-		    		type: "POST",
-		    		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/Favorite",
-		    		data: '{ "IdeaName":"' +  +'"}',
-		    		contentType: "application/json; charset=utf-8",
-	                dataType: "json",
-	                success: function (msg) {
-	                	console.log("Favorite succeeded");
-	                },
-	                error: function (msg) {
-	                	console.log("Favorite failed");
-	                }
-		    	});
-	    	} else {
-	    		alert("You must log in to favorite this.");
-	    	}
-	    },
-	    
-	    // Get a user's favorites
-	    getFavorites: function() {
-	    	if ($.isLoggedIn()) {
-		    	$.ajax({
-		    		type: "POST",
-		    		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/GetFavorites",
-		    		data: '{ "user":"' +  +'"}',
-		    		contentType: "application/json; charset=utf-8",
-	                dataType: "json",
-	                success: function (msg) {
-	                	console.log("Get favorites succeeded");
-	                },
-	                error: function (msg) {
-	                	console.log("Get favorites failed");
-	                }
-		    	});
-	    	} else {
-	    		alert("You must be logged in.");
-	    	}
-	    },
-	    
-	    // Log a user in, extremely securely ;)
-	    login: function() {
-	    	var username = $('#username').val();
-	    	if (username != '' && $('#password') != '') {
-	    		if ($('').passwordValid($('password'))) {
-	    			$.cookie("loginStatus", username);
-	    		} else {
-	    			alert("Incorrect username/password");
-	    		}
-	    		
-	    	}
-	    },
-	    
-	    // Validate password with backend
-	    passwordValid: function(pwrd) {
-	    	return true;
-	    },
-	    
-	    // Log a user out
-	    logout: function() {
-	    	$.removeCookie("loginStatus"); // foolproof
-	    },
-	    
-	    // Returns true if user is logged in, false otherwise
-	    isLoggedIn: function() {
-	    	if ($.cookie("loginStatus") != null) {
-	    		return true;
-	    	}
-	    	return false;
-	    }
+// Submit idea to backend
+function submitIdea() {
+	$.ajax({
+		type: "POST",
+		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/CreateIdea",
+		data: '{ "IdeaName":"' + $('#mainIdeaField').val() + '","IdeaDate":"today"' + '"}',
+		contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (msg) {
+        	console.log("Idea submitted");
+        },
+        error: function (msg) {
+        	console.log("Idea FAILED to submit :(");
+        }
 	});
-	
-	$("#mainIdeaButton").click($('').submitIdea());
-	$('#loginButton').login();
-	$('#logoutButton').logout();
-	
-});
+};
+    
+// Search for idea with name containing keyword(s)
+function searchIdea() {
+	$.ajax({
+		type: "POST",
+		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/SearchIdeas",
+		data: '{ "keywords":"' + $('#mainSearchField').val() +'"}',
+		contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (msg) {
+        	console.log("Search succeeded");
+        },
+        error: function (msg) {
+        	console.log("Search failed");
+        }
+	});
+};
+    
+// Fetch all ideas
+function getAllIdeas() {
+	$.ajax({
+		type: "POST",
+		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/GetAllIdeas",
+		data: '{ "GetIdeas":"true"}',
+		contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (msg) {
+        	console.log("Get all ideas succeeded" + msg);
+        	return $.ajax.response();
+        },
+        error: function (msg) {
+        	console.log("Get all ideas failed");
+        }
+	});
+};
+    
+// Mark an idea as a favorite
+function favorite() {
+	if (isLoggedIn()) {
+    	$.ajax({
+    		type: "POST",
+    		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/Favorite",
+    		data: '{ "IdeaName":"' +  +'"}',
+    		contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (msg) {
+            	console.log("Favorite succeeded");
+            },
+            error: function (msg) {
+            	console.log("Favorite failed");
+            }
+    	});
+	} else {
+		alert("You must log in to favorite this.");
+	}
+};
+    
+// Get a user's favorites
+function getFavorites() {
+	if (isLoggedIn()) {
+    	$.ajax({
+    		type: "POST",
+    		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/GetFavorites",
+    		data: '{ "user":"' +  +'"}',
+    		contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (msg) {
+            	console.log("Get favorites succeeded");
+            },
+            error: function (msg) {
+            	console.log("Get favorites failed");
+            }
+    	});
+	} else {
+		alert("You must be logged in.");
+	}
+};
+    
+// Log a user in, extremely securely ;)
+function login() {
+	var username = $('#username').val();
+	if (username != '' && $('#password') != '') {
+		if (passwordValid($('password'))) {
+			$.cookie("loginStatus", username);
+		} else {
+			alert("Incorrect username/password");
+		}
+	}
+};
+    
+// Validate password with backend
+function passwordValid(pwrd) {
+	return true;
+};
+    
+// Log a user out
+function logout() {
+	if (isLoggedIn()) {
+		$.removeCookie("loginStatus"); // foolproof
+	}
+	console.log("Logged out");
+};
+    
+// Returns true if user is logged in, false otherwise
+function isLoggedIn() {
+	if ($.cookie("loginStatus") != null) {
+		return true;
+	}
+	return false;
+};
 
+
+
+/*// Real-time suggestions and search results as user types into field
+// Not able to connect to WebService.asmx
 $(function () {
     $('#mainIdeaField').keyup(function (event) {
         if (event.which == 13) {
@@ -230,17 +232,18 @@ $(function () {
     });
     
 });
+*/
 
 
-	$('#content').css({
-		'background-image': 'url(assets/home.jpg)',
-		'background-size': 'cover',
-	});
-	$('#blurb').append($('<div id="yadayada">').css('text-align', 'center'));
-	for (var i = 1; i < 5; i++) {
-		$('#yadayada').append(createBox("hello", "author", "543534", "43", "99"));	
-	}
-	/* $('#content').append($('<div id="blurb">').append(
-			$('<p>').text("Ideas are awesome. Share yours with the world.")
-		)
-	); */
+$('#content').css({
+	'background-image': 'url(assets/home.jpg)',
+	'background-size': 'cover',
+});
+$('#blurb').append($('<div id="yadayada">').css('text-align', 'center'));
+for (var i = 1; i < 5; i++) {
+	$('#yadayada').append(createBox("hello", "author", "543534", "43", "99"));	
+}
+/* $('#content').append($('<div id="blurb">').append(
+		$('<p>').text("Ideas are awesome. Share yours with the world.")
+	)
+); */
