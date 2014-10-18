@@ -2,46 +2,123 @@ $(document).ready(function() {
 	console.log('Yup, we loaded');
 	
 	jQuery.fn.extend({
-	    zigzag: function () {
-	        var text = $(this).text();
-	        var zigzagText = 'hello, world';
-	        var temp = document.createElement("p");
-	        temp.innerHTML = "Hello, world!";
-	        this.append(temp);
-	        return zigzagText;
-	    },
-	    // Save idea to backend
+
+	    // Submit idea to backend
 	    submitIdea: function() {
 	    	$.ajax({
 	    		type: "POST",
-	    		url: "/IdeaSturm.asmx/CreateIdea", // backend
-	    		data: '{ "IdeaName":"' + $('#mainIdeaField').val() + '","IdeaDate":"today"}',
+	    		url: "ideasturm.azurewebsites.net/IdeaSturm.asmx/CreateIdea",
+	    		data: '{ "IdeaName":"' + $('#mainIdeaField').val() + '","IdeaDate":"today"' + '"}',
 	    		contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (msg) {
-                    
+                	console.log("Idea submitted");
                 },
                 error: function (msg) {
-
+                	console.log("Idea FAILED to submit :(");
                 }
 	    	});
+	    },
+	    
+	    // Search for idea with name containing keyword(s)
+	    searchIdea: function() {
+	    	$.ajax({
+	    		type: "POST",
+	    		url: "ideasturm.azurewebsites.net/IdeaSturm.asmx/SearchIdeas",
+	    		data: '{ "keywords":"' + $('#mainSearchField').val() +'"}',
+	    		contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                	console.log("Search succeeded");
+                },
+                error: function (msg) {
+                	console.log("Search failed");
+                }
+	    	});
+	    },
+	    
+	    // Fetch all ideas
+	    getAllIdeas: function() {
+	    	$.ajax({
+	    		type: "POST",
+	    		url: "ideasturm.azurewebsites.net/IdeaSturm.asmx/GetAllIdeas",
+	    		data: '{ "GetIdeas":"true"}',
+	    		contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                	console.log("Get all ideas succeeded");
+                },
+                error: function (msg) {
+                	console.log("Get all ideas failed");
+                }
+	    	});
+	    },
+	    
+	    // Mark an idea as a favorite
+	    favorite: function() {
+	    	if ($.isLoggedIn()) {
+		    	$.ajax({
+		    		type: "POST",
+		    		url: "ideasturm.azurewebsites.net/IdeaSturm.asmx/Favorite",
+		    		data: '{ "IdeaName":"' +  +'"}',
+		    		contentType: "application/json; charset=utf-8",
+	                dataType: "json",
+	                success: function (msg) {
+	                	console.log("Favorite succeeded");
+	                },
+	                error: function (msg) {
+	                	console.log("Favorite failed");
+	                }
+		    	});
+	    	} else {
+	    		alert("You must log in to favorite this.");
+	    	}
+	    },
+	    
+	    // Get a user's favorites
+	    getFavorites: function() {
+	    	if ($.isLoggedIn()) {
+		    	$.ajax({
+		    		type: "POST",
+		    		url: "ideasturm.azurewebsites.net/IdeaSturm.asmx/GetFavorites",
+		    		data: '{ "user":"' +  +'"}',
+		    		contentType: "application/json; charset=utf-8",
+	                dataType: "json",
+	                success: function (msg) {
+	                	console.log("Get favorites succeeded");
+	                },
+	                error: function (msg) {
+	                	console.log("Get favorites failed");
+	                }
+		    	});
+	    	} else {
+	    		alert("You must be logged in.");
+	    	}
+	    },
+	    
+	    // Log a user in, extremely securely ;)
+	    login: function() {
+	    	
+	    },
+	    
+	    // Returns true if user is logged in, false otherwise
+	    isLoggedIn: function() {
+	    	
 	    }
 	});
-
-	$('.target').zigzag();
-	//console.log($('.target').zigzag());
 	
-	$('').submitIdea();
+	$("#mainIdeaButton").click($('').submitIdea());
+	
 });
 
 $(function () {
-    $('.userInput').keyup(function (event) {
+    $('#mainIdeaField').keyup(function (event) {
         if (event.which == 13) {
             var templateResult = $('.result');
             $.ajax({
                 type: "POST",
                 url: "WebService.asmx/AddString",
-                data: '{ "input": "' + $('.userInput').val() + '"}',
+                data: '{ "input":"' + $('.userInput').val() + '"}',
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (msg) {
