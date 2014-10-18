@@ -7,7 +7,7 @@ $(document).ready(function() {
 	
 	$('#browseButton').click(loadBrowse);
 	$('#headNav h1 a').click(loadSubmit);
-	$("#mainIdeaButton").click(submitIdea);
+	$("#mainSubmitButton").click(submitIdea);
 	$('#logInButton').click(login);
 	$('#logOutButton').click(logout);
 	/* $('#content').append($('<div id="blurb">').append(
@@ -60,12 +60,14 @@ function createBox(title, author, fav, com, imp) {
 
 // Submit idea to backend
 function submitIdea() {
+	var userID = ((isLoggedIn()) ? $.cookie("userID") : "1");
 	$.ajax({
 		type: "POST",
 		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/CreateIdea",
-		data: '{ "IdeaName":"' + $('#mainIdeaField').val() + '","IdeaDate":"today"' + '"}',
+		data: '{ "IdeaName":"' + $('#mainIdeaField').val() + '","IdeaDescription:' + $('#mainIdeaField').val()
+		+ '","UserID:' + userID + '","IdeaDate":"today"' + '"}',
 		contentType: "application/json; charset=utf-8",
-        dataType: "json",
+        dataType: "jsonp",
         success: function (msg) {
         	console.log("Idea submitted");
         },
