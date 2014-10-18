@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	if ($.cookie('loginID') == undefined) {
-		$('#ulNav li').toggleClass('noShow')
+		//$('#ulNav li').toggleClass('noShow')
 	}
 	
 	$('#browseButton').click(loadBrowse);
@@ -11,10 +11,8 @@ $(document).ready(function() {
 	$("#mainSubmitButton").click(submitIdea);
 	$('#logInButton').click(login);
 	$('#logOutButton').click(logout);
-<<<<<<< HEAD
+	$('#signUpButton').click(signup);
 
-	
-=======
 	$('#mainIdeaField').click(function() {
 		if ($(this).text() == 'Title') {
 			$(this).text('');
@@ -32,7 +30,6 @@ $(document).ready(function() {
 	});
 
 
->>>>>>> d3308d130f3ec7da345137c75398e294e7864633
 	/* $('#content').append($('<div id="blurb">').append(
 			$('<p>').text("Ideas are awesome. Share yours with the world.")
 		)
@@ -155,12 +152,11 @@ function createIndividualIdea(avatarInfo, user, title, description, commentData)
 // Submit idea to backend
 function submitIdea() {
 	var userID = ((isLoggedIn()) ? $.cookie("userID") : "1");
-	console.log($('#mainIdeaField').text());
 	$.ajax({
 		type: "POST",
 		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/CreateIdea",
-		data: '{"IdeaName":"' + $('#mainIdeaField').text() + '","IdeaDescription":"' + $('#mainIdeaField').text() +
-				'","UserID":"' + userID + '","tags":"' + $('#mainIdeaField').text() + '"}',
+		data: '{"IdeaName":"' + $('#mainIdeaField').text() + '","IdeaDescription":"' + $('#mainIdeaFieldDescription').text() +
+				'","UserID":"' + userID + '","tags":"' + $('#mainIdeaFieldTags').text() + '"}',
 		contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (msg) {
@@ -272,22 +268,47 @@ function getFavorites() {
 		alert("You must be logged in.");
 	}
 };
+
+// Register a new user: name, password, email
+// createUser operation returns 1 if successful, 0 if not
+function signup() {
+	console.log("Sign up");
+	$.ajax({
+		type: "POST",
+		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/CreateUser",
+		data: '{ "name":"' + $('#usernameSignUp').text() + '","pass":"' + $('#passwordSignUp').text() +
+				'","email":"' + $('#emailSignUp') + '"}',
+		contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (msg) {
+        	console.log("Sign up succeeded");
+        },
+        error: function (msg) {
+        	console.log("Sign up failed");
+        }
+	})
+};
     
 // Log a user in, extremely securely ;)
 function login() {
-	var username = $('#username').val();
-	if (username != '' && $('#password') != '') {
-		if (passwordValid($('password'))) {
-			$.cookie("loginStatus", username);
-		} else {
-			alert("Incorrect username/password");
-		}
+	console.log("login");
+	var username = $('#username').text();
+	var password = $('#password').text();
+	if (username != '' && password != '') {
+		$.ajax({
+			type: "POST",
+			url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/login",
+			data: '{ "name":"' + username + '","pass":"' + password + '"}',
+			contentType: "application/json; charset=utf-8",
+	        dataType: "json",
+	        success: function (msg) {
+	        	console.log("Log in succeeded");
+	        },
+	        error: function (msg) {
+	        	console.log("Log in failed");
+	        }
+		});
 	}
-};
-    
-// Validate password with backend
-function passwordValid(pwrd) {
-	return true;
 };
     
 // Log a user out
