@@ -7,13 +7,10 @@ $(document).ready(function() {
 	
 	$('#browseButton').click(loadBrowse);
 	$('#headNav h1 a').click(loadSubmit);
-<<<<<<< HEAD
 	$('#backButton').click(loadBack);
-=======
 	$("#mainSubmitButton").click(submitIdea);
 	$('#logInButton').click(login);
 	$('#logOutButton').click(logout);
->>>>>>> 9657adeaca8a967ab79135b836235bbea429e352
 	/* $('#content').append($('<div id="blurb">').append(
 			$('<p>').text("Ideas are awesome. Share yours with the world.")
 		)
