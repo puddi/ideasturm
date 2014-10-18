@@ -5,7 +5,7 @@ $(document).ready(function() {
 	}
 
 	if (isLoggedIn()) {
-		$('#ulNav li').toggleClass('noShow');
+		$('#ulNav li:not(:first-child)').toggleClass('noShow');
 	}
 	
 	$('#browseButton').click(loadBrowse);
@@ -476,7 +476,18 @@ function login() {
 			contentType: "application/json; charset=utf-8",
 	        dataType: "json",
 	        success: function (msg) {
+<<<<<<< HEAD
 	        	callbacks(msg);
+=======
+	        	if (msg["d"] === 1) {
+	        		$.cookie("loginStatus", username);
+	        		$('#ulNav li:not(:first-child)').toggleClass('noShow');
+		        	console.log("Log in succeeded");
+	        	} else {
+	        		console.log("Request succeeded, log in failed");
+	        		alert("Invalid username or password");
+	        	}
+>>>>>>> 8319b3a10345934b57f33734ad35980ed3c3bb94
 	        },
 	        error: function (msg) {
 	        	console.log("Log in request failed");
@@ -489,16 +500,21 @@ function login() {
 function logout() {
 	if (isLoggedIn()) {
 		$.removeCookie("loginStatus"); // foolproof
-		$('#ulNav li').toggleClass('noShow');
+		$('#ulNav li:not(:first-child)').toggleClass('noShow');
 	}
 	console.log("Logged out");
+	loadSubmit();
 };
     
 // Returns true if user is logged in, false otherwise
 function isLoggedIn() {
+<<<<<<< HEAD
 	return true;
 	if ($.cookie("loginStatus") !== undefined) {
 		console.log("true");
+=======
+	if ($.cookie("loginStatus") != null) {
+>>>>>>> 8319b3a10345934b57f33734ad35980ed3c3bb94
 		return true;
 	}
 	console.log("false");
