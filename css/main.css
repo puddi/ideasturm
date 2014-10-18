@@ -25,7 +25,7 @@ body {
 }
 
 #headNav h1 a {
-	margin-left: -60px;
+	margin-left: -70px;
 }
 
 #headNav span:first-child {
@@ -34,7 +34,9 @@ body {
 
 #headNav img {
 	display: inline;
-	height: 60px;
+	height: 50px;
+	margin-top: 5px;
+	margin-left: 10px;
 	float: left;
 }
 
