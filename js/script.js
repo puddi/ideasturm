@@ -10,6 +10,8 @@ $(document).ready(function() {
 	); */
 });
 
+
+
 function loadSubmit() {
 	$('#content').fadeOut(300, function() {
 		$('#content').empty();
@@ -25,7 +27,7 @@ function loadBrowse() {
 		// request for browse stuff here
 		// for now i just have temp data
 		$results = $('<div id="browse">').css('text-align', 'center');
-		$results.append($('<div id="browseFilters">').html('<h1>Choose a Category</h1><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et </p>'));
+		$results.append($('<div id="browseFilters">').html('<div id="searchTags" contenteditable="true">Search by Keyword or Hashtag</div><div id="searchAuthor" contenteditable="true">Search by Idea Creator</div><div id="sortIdeas">Sort Ideas</div><div id=filterSearch>Filter</div>'));
 		$tiles = $('<div id="browseIdeas">');
 		for (var i = 0; i < 5; ++i) {
 			$tiles.append(createBox(i, i, i, i, i));
