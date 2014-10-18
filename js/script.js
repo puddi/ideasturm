@@ -6,11 +6,14 @@ $(document).ready(function() {
 
 	
 	$('#browseButton').click(loadBrowse);
+	$('#sortIdeasButton').click(getIdeaByTag);
 	$('#headNav h1 a').click(loadSubmit);
 	$('#backButton').click(loadBack);
 	$("#mainSubmitButton").click(submitIdea);
 	$('#logInButton').click(login);
 	$('#logOutButton').click(logout);
+
+	
 	/* $('#content').append($('<div id="blurb">').append(
 			$('<p>').text("Ideas are awesome. Share yours with the world.")
 		)
@@ -33,7 +36,7 @@ function loadBrowse() {
 		// request for browse stuff here
 		// for now i just have temp data
 		$results = $('<div id="browse">').css('text-align', 'center');
-		$results.append($('<div id="browseFilters">').html('<div id="searchTags" contenteditable="true">Search by Keyword or Hashtag</div><div id="searchAuthor" contenteditable="true">Search by Idea Creator</div><div id="sortIdeas">Sort Ideas</div><div id=filterSearch>Filter</div>'));
+		$results.append($('<div id="browseFilters">').html('<div id="searchTags" contenteditable="true">Search by Keyword or Hashtag</div><div id="searchAuthor" contenteditable="true">Search by Idea Creator</div><div id="sortIdeas" onclick="getIdeaByTag"><a href="#" id="sortIdeasButton">Sort Ideas</a></div><div id=filterSearch>Filter</div>'));
 		$tiles = $('<div id="browseIdeas">');
 		getAllIdeas();
 		for (var i = 0; i < 20; ++i) {
@@ -106,13 +109,14 @@ function createIndividualIdea(avatarInfo, user, title, description, commentData)
 // Submit idea to backend
 function submitIdea() {
 	var userID = ((isLoggedIn()) ? $.cookie("userID") : "1");
+	console.log($('#mainIdeaField').text());
 	$.ajax({
 		type: "POST",
 		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/CreateIdea",
-		data: '{ "IdeaName":"' + $('#mainIdeaField').val() + '","IdeaDescription:' + $('#mainIdeaField').val()
-		+ '","UserID:' + userID + '","IdeaDate":"today"' + '"}',
+		data: '{"IdeaName":"' + $('#mainIdeaField').text() + '","IdeaDescription":"' + $('#mainIdeaField').text() +
+				'","UserID":"' + userID + '","tags":"' + $('#mainIdeaField').text() + '"}',
 		contentType: "application/json; charset=utf-8",
-        dataType: "jsonp",
+        dataType: "json",
         success: function (msg) {
         	console.log("Idea submitted");
         },
@@ -122,15 +126,18 @@ function submitIdea() {
         }
 	});
 };
-    
-// Search for idea with name containing keyword(s)
-function searchIdea() {
+
+// Search for idea by tag
+function getIdeaByTag() {
+	console.log("Get idea by tag");
+	var tags = $('#searchTags').val().split(' ').toString();
+	console.log(tags);
 	$.ajax({
 		type: "POST",
 		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/SearchIdeas",
-		data: '{}',
+		data: '{"Tags":"' + tags + '"}',
 		contentType: "application/json; charset=utf-8",
-        dataType: "jsonp",
+        dataType: "json",
         success: function (msg) {
         	console.log("Search succeeded");
         },
@@ -140,6 +147,23 @@ function searchIdea() {
 	});
 };
     
+//// Search for idea with name containing keyword(s)
+//function searchIdea() {
+//	$.ajax({
+//		type: "POST",
+//		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/SearchIdeas",
+//		data: '{}',
+//		contentType: "application/json; charset=utf-8",
+//        dataType: "jsonp",
+//        success: function (msg) {
+//        	console.log("Search succeeded");
+//        },
+//        error: function (msg) {
+//        	console.log("Search failed");
+//        }
+//	});
+//};
+    
 // Fetch all ideas
 function getAllIdeas() {
 	$.ajax({
@@ -148,12 +172,14 @@ function getAllIdeas() {
 		//data: '{"GetIdeas":"true"}',
 		data: '{}',
 		contentType: "application/json; charset=utf-8",
-        dataType: "jsonp",
+        dataType: "json",
         success: function (msg) {
-        	console.log("Get all ideas succeeded" + msg);
-        	return $.ajax.response();
+        	console.log(msg.responseJSON);
+        	console.log("Get all ideas succeeded");
+        	return msg.responseJSON;
         },
         error: function (msg) {
+        	console.log(msg.responseJSON);
         	console.log("Get all ideas failed");
         }
 	});
@@ -188,7 +214,7 @@ function getFavorites() {
     		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/GetFavorites",
     		data: '{ "user":"' +  +'"}',
     		contentType: "application/json; charset=utf-8",
-            dataType: "jsonp",
+            dataType: "json",
             success: function (msg) {
             	console.log("Get favorites succeeded");
             },
