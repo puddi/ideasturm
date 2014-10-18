@@ -339,9 +339,9 @@ function getAllIdeas() {
 		contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (msg) {
-        	console.log($.parseJSON(msg["d"]));
+        	var temp = $.parseJSON(msg["d"]);
         	console.log("Get all ideas succeeded");
-        	return $.parseJSON(msg["d"]);
+        	return temp;
         },
         error: function (msg) {
         	console.log(msg);
