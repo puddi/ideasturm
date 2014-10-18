@@ -11,15 +11,15 @@ $(document).ready(function() {
 	        return zigzagText;
 	    },
 	    // Save idea to backend
-	    saveIdea: function() {
+	    submitIdea: function() {
 	    	$.ajax({
 	    		type: "POST",
-	    		url: "ideasturm.html", // backend
-	    		data: '{ "idea": ' + $('.userIdea').val() + '"}',
+	    		url: "/IdeaSturm.asmx/CreateIdea", // backend
+	    		data: '{ "IdeaName":"' + $('#mainIdeaField').val() + '","IdeaDate":"today"}',
 	    		contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (msg) {
-                    $.ajax.send();
+                    
                 },
                 error: function (msg) {
 
@@ -31,7 +31,7 @@ $(document).ready(function() {
 	$('.target').zigzag();
 	//console.log($('.target').zigzag());
 	
-	$('.target').saveIdea();
+	$('').submitIdea();
 });
 
 $(function () {
@@ -79,4 +79,11 @@ $(function () {
 });
 
 
-
+	$('#content').css({
+		'background-image': 'url(assets/home.jpg)',
+		'background-size': 'cover',
+	});
+	/* $('#content').append($('<div id="blurb">').append(
+			$('<p>').text("Ideas are awesome. Share yours with the world.")
+		)
+	); */

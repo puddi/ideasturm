@@ -6,19 +6,22 @@
 		<script src="js/script.js"></script>
 	</head>
 	<body>
-		<h1>Ideasturm - Ideas like a storm</h1>
-		
-	    <div>Search the sturm!  A-Z and spaces only:</div>
-	    <input type="text" class="userInput" />
-	
-	    <div class="results">
-	
-	        <div class="target">
-	        	<h2>These are your results:</h2>
-	        </div>
-	    </div>
-	
-	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-	    <!-- <script src="JavaScript.js"></script> -->
+		<header id="headNav">
+			<h1>Idea<span>Sturm</span></h1>
+			<ul id="ulNav">
+				<li><a href="#">Submit</a></li>
+				<li><a href="#">Browse</a></li>
+				<li><a href="#">Me</a></li>
+			</ul>
+		</header>
+		<div id="content">
+			<div id="blurb">
+				<p>Ideas are awesome. Share yours with the world.</p>
+				<div id="mainIdeaField" contenteditable="true">
+				</div>
+				<p><a href="#"><span id="mainSubmitButton">Submit</span></a></p>
+			</div>
+		</div>
+
 	</body>
 </html>
