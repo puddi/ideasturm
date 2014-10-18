@@ -144,8 +144,7 @@ body {
 
 #browseFilters {
 	width: 100%;
-	background-color: #FFFFFF;
-	opacity: 0.7;
+	background-color: #88E;
 	margin-top: 0;
 }
 
@@ -156,14 +155,15 @@ body {
 	padding-right: 0.5em;
 }
 
-#browseFilters p{
-	text-align: center;
-	padding-bottom: 0.5em;
+#browseFilters div {
+	padding: 0.5em;
+	color: black;
 	margin: 10px;
+	display: inline-block;
 }
 
-#browseIdeas {
-	width: 100%;
+#searchTags, #searchAuthor {
+
 }
 
 #individualIdea {
@@ -256,3 +256,10 @@ body {
     display: inline-block;
 }
 /** Replace these style rules with the proper div that this talks about, it will come from the .js file. **/
+
+#searchTags, #searchAuthor {
+	background: #FFF;
+}
+
+
+
