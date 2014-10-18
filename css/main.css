@@ -22,11 +22,22 @@ body {
 	line-height: 60px;
 	margin: 0;
 	text-align: center;
-
 }
 
-#headNav h1:first-child span:first-child {
+#headNav h1 a {
+	margin-left: -70px;
+}
+
+#headNav span:first-child {
 	color: #88E;
+}
+
+#headNav img {
+	display: inline;
+	height: 50px;
+	margin-top: 5px;
+	margin-left: 10px;
+	float: left;
 }
 
 #ulNav {
@@ -60,7 +71,7 @@ body {
 	-webkit-transition: all .3s;
 }
 
-#ulNav li a:hover, #backNav a:hover, #blurb a:hover {
+#signUp a:hover, #ulNav li a:hover, #backNav a:hover, #blurb a:hover {
 	color: #AAA;
 }
 
@@ -351,4 +362,53 @@ body {
 
 #profile .ideaBoxTemplate {
 	background-color: #CCC;
+}
+
+#signUp {
+	position: absolute;
+	right: 0;
+	top: 60px;
+	width: 300px;
+	background-color: #CCC;
+	height: 120px;
+	text-align: center;
+	display: none;
+}
+
+#signUp div {
+	background-color: #CCC;
+	border-bottom: 1px solid black;
+	color: #222;
+}
+
+#signUp p {
+	background-color: #222;
+	margin: 0;
+	padding: 1em 0;
+	color: #CCC;
+}
+
+
+#login {
+	position: absolute;
+	right: 0;
+	top: 60px;
+	width: 300px;
+	background-color: #CCC;
+	height: 100px;
+	text-align: center;
+	display: none;
+}
+
+#login div {
+	background-color: #CCC;
+	border-bottom: 1px solid black;
+	color: #222;
+}
+
+#login p {
+	background-color: #222;
+	margin: 0;
+	padding: 1em 0;
+	color: #CCC;
 }

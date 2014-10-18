@@ -1,6 +1,11 @@
 $(document).ready(function() {
+<<<<<<< HEAD
 	if ($.cookie('loginID') == undefined) {
 		//$('#ulNav li').toggleClass('noShow')
+=======
+	if (isLoggedIn()) {
+		$('#ulNav li').toggleClass('noShow')
+>>>>>>> beecc59fb49cde625bf2b357bcbac336ad07937d
 	}
 	
 	$('#browseButton').click(loadBrowse);
@@ -11,6 +16,7 @@ $(document).ready(function() {
 	$("#mainSubmitButton").click(submitIdea);
 	$('#logInButton').click(login);
 	$('#logOutButton').click(logout);
+<<<<<<< HEAD
 	$('#signUpButton').click(signup);
 
 	$('#mainIdeaField').click(function() {
@@ -22,18 +28,61 @@ $(document).ready(function() {
 		if ($(this).text() == 'Description') {
 			$(this).text('');
 		}
+=======
+	$('#signUpButton').click(function() {
+		$('#login').slideUp(400, function() {
+			if ($('#signUp').css('display') == 'none') {
+				$('#signUp').slideDown();
+				$('#usernameSignUp').click(function() {
+					if ($(this).text() == 'username') {
+						$(this).text('');
+					}
+				});
+				$('#emailSignUp').click(function() {
+					if ($(this).text() == 'email') {
+						$(this).text('');
+					}
+				});
+				$('#passwordSignUp').click(function() {
+					if ($(this).text() == 'password') {
+						$(this).text('');
+					}
+				});
+			} else {
+				$('#signUp').slideUp();
+			}
+		});
+>>>>>>> beecc59fb49cde625bf2b357bcbac336ad07937d
 	});
-	$('#mainIdeaFieldTags').click(function() {
-		if ($(this).text() == 'Tags, comma-separated') {
-			$(this).text('');
-		}
+	$('#loginButton').click(function() {
+		$('#signUp').slideUp(400, function() {	
+			if ($('#login').css('display') == 'none') {
+				$('#login').slideDown();
+				$('#usernameLogin').click(function() {
+					if ($(this).text() == 'username') {
+						$(this).text('');
+					}
+				});
+				$('#passwordLogin').click(function() {
+					if ($(this).text() == 'password') {
+						$(this).text('');
+					}
+				});
+			} else {
+				$('#login').slideUp();
+			}
+		});	
 	});
+<<<<<<< HEAD
 
 
 	/* $('#content').append($('<div id="blurb">').append(
 			$('<p>').text("Ideas are awesome. Share yours with the world.")
 		)
 	); */
+=======
+	loadSubmit();
+>>>>>>> beecc59fb49cde625bf2b357bcbac336ad07937d
 });
 
 var $pastState;
@@ -41,8 +90,29 @@ var $pastState;
 function loadSubmit() {
 	$('#content').fadeOut(300, function() {
 		$('#content').empty();
-		$('#content').append($('<div>').attr('id', 'blurb').html('<p>Ideas are awesome. Share yours with the world.</p><div id="mainIdeaField" contenteditable="true"></div><p><a href="#"><span id="mainSubmitButton">Submit</span></a></p>')
-		).fadeIn(300);
+		if (isLoggedIn()) {
+			$('#content').append($('<div>').attr('id', 'blurb').html('<p>Ideas are awesome. Share yours with the world.</p><div id="mainIdeaField" contenteditable="true">Title</div><div id="mainIdeaFieldDescription" contenteditable="true">Description</div><div id="mainIdeaFieldTags" contenteditable="true">Tags, comma-separated</div><p><a href="#"><span id="mainSubmitButton">Submit</span></a></p>'))
+			.fadeIn(300);
+		} else {
+			$('#content').append($('<div>').attr('id', 'blurb').html('<p>Ideas are awesome. Share yours with the world.</p><div id="mainIdeaField" contenteditable="true"></div><p><a href="#"><span id="mainSubmitButton">Submit</span></a></p>')
+			).fadeIn(300);
+		}
+		$('#mainIdeaField').click(function() {
+			if ($(this).text() == 'Title') {
+				$(this).text('');
+			}
+		});
+		$('#mainIdeaFieldDescription').click(function() {
+			if ($(this).text() == 'Description') {
+				$(this).text('');
+			}
+		});
+		$('#mainIdeaFieldTags').click(function() {
+			if ($(this).text() == 'Tags, comma-separated') {
+				$(this).text('');
+			}
+		});
+
 	});
 }
 
@@ -111,6 +181,7 @@ var $commentTemplate = $('<div>').addClass('comment').html('<div class="avatar">
 var $individualIdeaTemplate = $('<div id="individualIdea">').html('<div id="ideaInfo"><div class="title"><p></p></div><div class="author"><div class="avatarDiv"></div><p>by: <span>author</span></p></div><p class="description"></p></div><hr><div id="ideaOptions"><p class="commentsOption">Show comments</p><p class="implementationsOption">Show implementations</p></div><div id="ideaFeedback"></div>');
 
 var $profileTemplate = $('<div id="profile">').html('<div class="avatar"><div class="avatarDiv"></div><h2>name goes here</h2></div><hr><div id="options"><p>Ideas</p><p>Comments</p><p class="lastchild">Implementations</p></div><div id="stuffThatActuallyGoesHere"><br style="clear:both;"></div>');
+
 
 
 function createProfile(userID) {
