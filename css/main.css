@@ -103,7 +103,7 @@ body {
 	color: #222;
 	font-size: 24px;
 	padding: 4px;
-	height: 30px;
+	height: 65px;
 	background-color: white;
 	text-align: left;
 	
@@ -132,7 +132,7 @@ body {
 	color: #222;
 	font-size: 24px;
 	padding: 4px;
-	height: 30px;
+	height: 65px;
 	background-color: white;
 	text-align: left;
 }
@@ -412,3 +412,112 @@ body {
 	padding: 1em 0;
 	color: #CCC;
 }
+
+/* Mystical Magical Browse Drop Menu CSS */
+
+#sortSearch {
+	background-color: white;
+	position: relative;
+}
+
+#sortSearch a {
+	color: #222;
+	text-decoration: none;
+}
+
+#sortSearch ul {
+	position: absolute;
+	display: none;
+	padding: 0;
+	left: 0px;
+	width: 100%;
+	margin: 0;
+}
+
+#sortSearch li {
+	list-style: none;
+	text-align: left;
+	background-color: white;
+	padding: 7px;
+}
+
+#sortSearch li:hover {
+	background-color: #222;
+	color: white !important;
+}
+
+#filterSearch {
+	background-color: #222;
+}
+
+#filterSearch a {
+	color: white !important;
+	transition: all .2s;
+	-webkit-transition: all .2s;
+	text-decoration: none;
+}
+
+#filterSearch a:hover {
+	color: #AAA;
+}
+
+/* 
+#sortSearch {
+	margin: 0;
+}
+
+#sortSearch ul ul {
+	display: none;
+}
+
+#sortSearch ul li:hover > ul {
+	display: block;	
+}
+
+#sortSearch ul {
+	-webkit-padding-start: 0;
+	-webkit-margin-before: 0;
+	-webkit-margin-after: 0;
+	text-align: center;
+	list-style: none;
+	position: relative;
+	display: inline-table;
+}
+
+#sortSearch ul li ul {
+	padding: 0 ;
+}
+#sortSearch ul:after {
+	content: ""; 
+	clear: both; 
+	display: block;
+}
+
+#sortSearch ul li {
+	margin: 10px;
+}
+
+#sortSearch ul:hover {
+	background-color: #DDD;
+}
+
+
+
+#sortSearch ul ul {
+	color: black;
+	background: #DDD;
+	position: absolute;
+}
+
+
+#sortSearch ul ul li {
+	text-align: center;
+	color: #000000;
+}	
+
+#sortSearch ul ul li:hover{ 
+	background: #4b545f;
+}
+*/
+
+/* End magic that runs the drop down menu */
