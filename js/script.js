@@ -9,7 +9,7 @@ $(document).ready(function() {
 	}
 	
 	$('#browseButton').click(loadBrowse);
-	//$('#sortIdeasButton').click(getIdeaByTag); needs to be moved to actual search button
+	$('#sortIdeasButton').click(getIdeaByTag); //needs to be moved to actual search button
 	$('#headNav h1 a').click(loadSubmit);
 	$('#backButton').click(loadBack);
 	$('#profileButton').click(loadProfile);
@@ -21,7 +21,6 @@ $(document).ready(function() {
 		this.addEventListener("click", addFavorite);
 	});
 	
-//	getFavoritesForUser();
 
 	$('#mainIdeaField').click(function() {
 		if ($(this).text() == 'Title') {
@@ -133,7 +132,7 @@ function loadBrowse() {
 				var id = ideaList[i];
 				console.log(id);
 				console.log($.cookie("loginStatus"));
-				$res = createBox(id["IdeaName"], id["IdeaDescription"], id["IdeaID"], id["UserName"], id["Tags"]);
+				$res = createBox(id["IdeaName"], id["IdeaDescription"], id["NumFavorites"], id["NumComments"], id["NumImplementations"]);
 				$res.data('id', id['IdeaID']);
 				$res.children().not("p.stats").click(function() {
 					$pastState = $('#content').children().clone(true, true);
@@ -315,22 +314,22 @@ function getIdeaByName(ideaName) {
 	});
 };
     
-//// Search for idea with name containing keyword(s)
-//function searchIdea() {
-//	$.ajax({
-//		type: "POST",
-//		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/SearchIdeas",
-//		data: '{}',
-//		contentType: "application/json; charset=utf-8",
-//        dataType: "jsonp",
-//        success: function (msg) {
-//        	console.log("Search succeeded");
-//        },
-//        error: function (msg) {
-//        	console.log("Search failed");
-//        }
-//	});
-//};
+// Search for idea with name containing keyword(s)
+function searchIdea() {
+	$.ajax({
+		type: "POST",
+		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/SearchIdeas",
+		data: '{}',
+		contentType: "application/json; charset=utf-8",
+        dataType: "jsonp",
+        success: function (msg) {
+        	console.log("Search succeeded");
+        },
+        error: function (msg) {
+        	console.log("Search failed");
+        }
+	});
+};
     
 // Returns array of all idea "objects"
 function getAllIdeas(callback) {
@@ -476,9 +475,7 @@ function login() {
 			contentType: "application/json; charset=utf-8",
 	        dataType: "json",
 	        success: function (msg) {
-<<<<<<< HEAD
 	        	callbacks(msg);
-=======
 	        	if (msg["d"] === 1) {
 	        		$.cookie("loginStatus", username);
 	        		$('#ulNav li:not(:first-child)').toggleClass('noShow');
@@ -487,7 +484,6 @@ function login() {
 	        		console.log("Request succeeded, log in failed");
 	        		alert("Invalid username or password");
 	        	}
->>>>>>> 8319b3a10345934b57f33734ad35980ed3c3bb94
 	        },
 	        error: function (msg) {
 	        	console.log("Log in request failed");
@@ -508,13 +504,11 @@ function logout() {
     
 // Returns true if user is logged in, false otherwise
 function isLoggedIn() {
-<<<<<<< HEAD
 	return true;
 	if ($.cookie("loginStatus") !== undefined) {
 		console.log("true");
-=======
+	}
 	if ($.cookie("loginStatus") != null) {
->>>>>>> 8319b3a10345934b57f33734ad35980ed3c3bb94
 		return true;
 	}
 	console.log("false");
