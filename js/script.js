@@ -13,12 +13,8 @@ $(document).ready(function() {
 	$('#headNav h1 a').click(loadSubmit);
 	$('#backButton').click(loadBack);
 	$('#profileButton').click(loadProfile);
-<<<<<<< HEAD
-	$('#logInButton').click(login);
-=======
 	$("#mainSubmitButton").click(submitIdea);
 	$('#doLogInButton').click(login);
->>>>>>> 570296512c56bd7b79abc47c191b3c80c5e3e64b
 	$('#logOutButton').click(logout);
 	$('#doSignUpButton').click(signup);
 	$('.fave').each(function() {
