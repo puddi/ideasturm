@@ -54,6 +54,7 @@ $(document).ready(function() {
 			}
 		});	
 	});
+	
 	loadSubmit();
 });
 
@@ -94,7 +95,7 @@ function loadBrowse() {
 		// request for browse stuff here
 		// for now i just have temp data
 		$results = $('<div id="browse">').css('text-align', 'center');
-		$results.append($('<div id="browseFilters">').html('<div id="searchTags" contenteditable="true">Search by Keyword or Hashtag</div><div id="searchAuthor" contenteditable="true">Search by Idea Creator</div><div id="sortSearch" onclick="getIdeaByTag"><ul><li><a href="#" id="sortIdeasButton">Sort Ideas by</a><ul><li id="favIdea">Favorite</li><li id="mostComnts">Comments</li><li id="mostSolns">Solutions</li><li id="newIdeas">Newest</li><li id="oldIdeas">Oldest</li></ul></li></ul></div><div id=filterSearch>Filter</div>'));
+		$results.append($('<div id="browseFilters">').html('<div id="searchTags" contenteditable="true">Search by Keyword or Hashtag</div><div id="searchAuthor" contenteditable="true">Search by Idea Creator</div><div id="sortSearch" onclick="getIdeaByTag"><a href="#" id="sortIdeasButton">Sort by <span id="sortingMetric">time</a> <i class="fa fa-arrow-down"></i></a><ul><li>favorites</li><li>time</li><li>comments</li></ul></div><div id="filterSearch"><a href="#">Filter</a></div>'));
 		$tiles = $('<div id="browseIdeas">');
 		getAllIdeas();
 		for (var i = 0; i < 20; ++i) {
@@ -115,6 +116,14 @@ function loadBrowse() {
 			if ($(this).text() == 'Search by Idea Creator') {
 				$(this).text('');
 			}
+		});
+		$('#sortSearch, #sortSearch ul').hover(function() {
+			$('#sortSearch ul').css('display', 'block');
+		}, function() {
+			$('#sortSearch ul').css('display', 'none');
+		});
+		$('#sortSearch li').click(function() {
+			$('#sortingMetric').text($(this).text());
 		});
 	});
 }
