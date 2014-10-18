@@ -94,7 +94,7 @@ var $pastState;
 function loadSubmit() {
 	$('#content').fadeOut(300, function() {
 		$('#content').empty();
-		if (isLoggedIn()) {
+		if (true) {
 			$('#content').append($('<div>').attr('id', 'blurb').html('<p>Ideas are awesome. Share yours with the world.</p><div id="mainIdeaField" contenteditable="true">Title</div><div id="mainIdeaFieldDescription" contenteditable="true">Description</div><div id="mainIdeaFieldTags" contenteditable="true">Tags, comma-separated</div><p><a href="#"><span id="mainSubmitButton">Submit</span></a></p>'))
 			.fadeIn(300);
 		} else {
@@ -136,12 +136,15 @@ function loadBrowse() {
 				console.log($.cookie("loginStatus"));
 				$res = createBox(id["IdeaName"], id["IdeaDescription"], id["NumFavorites"], id["NumComments"], id["NumImplementations"]);
 				$res.data('id', id['IdeaID']);
+				$res = createBox(id["IdeaName"], (id["UserID"] ? id["UserID"] : "Anonymous"), id["NumFavorites"], id["NumComments"], id["NumImplementations"]);
+				$res.data('ideaData', id);
 				$res.children().not("p.stats").click(function() {
 					$pastState = $('#content').children().clone(true, true);
-					loadIndividualIdea('url(./assets/avatartest.png)', 'Bob', id["IdeaName"], id["IdeaDescription"], 45, 'blah');
+					var id = $(this).parent().data('ideaData');
+					createAndLoadIndividualIdea('url(./assets/avatartest.png)', id);
 				})
 				$res.children().find('.fa').click(function() {
-					addFavorite(id['IdeaID']); // returns the id of the idea
+					addFavorite($(this).parent().data('ideaData')['ideaID']); // returns the id of the idea
 				});
 				$tiles.append($res);
 			}
@@ -175,13 +178,14 @@ function loadBrowse() {
 					event.preventDefault();
 				}
 			});	
+			$('#backNav li').addClass('noShow');
 		}
 	});
 }
 
-function loadIndividualIdea(imageInfo, user, name, title, description, data) {
+function loadIndividualIdea(imageInfo, id) {
 	$('#content').fadeOut(300, function() {
-		$('#content').empty().append(createIndividualIdea(imageInfo, user, name, title, description));
+		$('#content').empty().append(createIndividualIdea(imageInfo, id));
 		$('#content').fadeIn(300);
 		$('#backNav li').toggleClass('noShow');
 	});
@@ -248,16 +252,61 @@ function createComment(avatarInfo, name, date, text) {
 	return $temp;
 }
 
-function createIndividualIdea(avatarInfo, user, title, description, favorites, commentData) {
-	var $temp = $individualIdeaTemplate.clone();
-	$temp.find('.title p').text(title);
-	$temp.find('.author .avatarDiv').css('background-image', avatarInfo);
-	$temp.find('.author span').text(user);
-	$temp.find('.description').text(description);
-	$temp.find('#count').text(favorites);
-	$temp.find('#ideaFeedback').html(createComment(avatarInfo, 'testCom', '10/10/10/', 'You know this idea sucks'));
-	// for each comment data do something w/ createComment();
-	return $temp;
+function createAndLoadIndividualIdea(avatarInfo, id) {
+	$.ajax({
+		type: 'POST',
+		url: 'http://ideasturm.azurewebsites.net/IdeaSturm.asmx/GetCommentsByIdea',
+		data: '{"id":"' + id["IdeaID"] + '"}',
+		contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (msg) {
+        	var $temp = $individualIdeaTemplate.clone();
+			$temp.find('.title p').text(id['IdeaName']);
+			$temp.find('.author .avatarDiv').css('background-image', avatarInfo);
+			$temp.find('.avatarDiv + p span').text((id["UserID"] ? id["UserID"] : "Anonymous"));
+			$temp.find('.description').text(id["IdeaDescription"]);
+			$temp.find('#count').text(id["NumFavorites"]);
+			var parsed = $.parseJSON(msg['d']);
+        	$.each(parsed, function(index, value) {
+        		$temp.find('#ideaFeedback').append(createComment(avatarInfo, value['username'], value['CommentDate'].split(" ")[0], value['commentText']));
+        	});
+        	$temp.find('#ideaFeedback').append($('<div>').attr('id', 'addCommentBox').data('id', id['IdeaID']).attr('contenteditable', 'true').text("Add a comment..."));
+        	$temp.find('#ideaFeedback').append($('<div>').attr('id', 'addNameBox').attr('contenteditable', 'true').text("Name here..."));
+        	$temp.find('#ideaFeedback').append($('<p>').attr('id', 'submitComment').html('<span>Submit</span>').click(function() {
+        		addComment($('#addCommentBox').text(), $('#addNameBox').text(), $('#addCommentBox').data('id'));
+        	}));
+        	$('#content').fadeOut(300, function() {
+	    		$('#content').empty().append($temp);
+	    		$('#content').fadeIn(300);
+				$('#backNav li').toggleClass('noShow');
+			});
+		}
+	});
+}
+
+
+function createIndividualIdea(avatarInfo, id) {
+	$.ajax({
+		type: 'POST',
+		url: 'http://ideasturm.azurewebsites.net/IdeaSturm.asmx/GetCommentsByIdea',
+		data: '{"id":"' + id["IdeaID"] + '"}',
+		contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (msg) {
+        	var $temp = $individualIdeaTemplate.clone();
+			$temp.find('.title p').text(id['IdeaInfo']);
+			$temp.find('.author .avatarDiv').css('background-image', avatarInfo);
+			$temp.find('.author span').text((id["UserID"] ? id["UserID"] : "Anonymous"));
+			$temp.find('.description').text(id["IdeaDescription"]);
+			$temp.find('#count').text(id["numFavorites"]);
+			var parsed = $.parseJSON(msg['d']);
+        	$.each(parsed, function(index, value) {
+        		$temp.find('#ideaFeedback').append(createComment(avatarInfo, value['username'], value['CommentDate'].split(" ")[0], value['commentText']));
+        	});
+
+		}
+	});
+
 }
 
 // Submit idea to backend
@@ -272,6 +321,7 @@ function submitIdea() {
         dataType: "json",
         success: function (msg) {
         	console.log("Idea submitted");
+        	loadBrowse();
         },
         error: function (msg) {
         	console.log("Idea FAILED to submit :(");
@@ -279,6 +329,19 @@ function submitIdea() {
         }
 	});
 };
+
+function addComment(text, name, ideaID) {
+	$.ajax({
+		type: "POST",
+		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/CreateComment",
+		data: '{"commenttext":"' + text + '","username":"' + name + '","ideaid":"' + ideaID + '"}',
+		contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function() {
+        	loadBrowse();
+        }
+    });
+}
 
 // Search for idea by tag
 function getIdeaByTag() {
@@ -533,6 +596,8 @@ function isLoggedIn() {
 		console.log("true");
 	}
 	if ($.cookie("loginStatus") != null) {
+	if ($.cookie("loginStatus") != undefined && $.cookie("loginStatus") != null) {
+		console.log("true");
 		return true;
 	}
 	console.log("false");
