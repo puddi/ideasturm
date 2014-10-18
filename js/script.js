@@ -5,7 +5,7 @@ $(document).ready(function() {
 	}
 
 	if (isLoggedIn()) {
-		$('#ulNav li').toggleClass('noShow');
+		$('#ulNav li:not(:first-child)').toggleClass('noShow');
 	}
 	
 	$('#browseButton').click(loadBrowse);
@@ -437,7 +437,7 @@ function login() {
 	        success: function (msg) {
 	        	if (msg["d"] === 1) {
 	        		$.cookie("loginStatus", username);
-	        		$('#ulNav li').toggleClass('noShow');
+	        		$('#ulNav li:not(:first-child)').toggleClass('noShow');
 		        	console.log("Log in succeeded");
 	        	} else {
 	        		console.log("Request succeeded, log in failed");
@@ -455,14 +455,14 @@ function login() {
 function logout() {
 	if (isLoggedIn()) {
 		$.removeCookie("loginStatus"); // foolproof
-		$('#ulNav li').toggleClass('noShow');
+		$('#ulNav li:not(:first-child)').toggleClass('noShow');
 	}
 	console.log("Logged out");
+	loadSubmit();
 };
     
 // Returns true if user is logged in, false otherwise
 function isLoggedIn() {
-	return true;
 	if ($.cookie("loginStatus") != null) {
 		return true;
 	}
