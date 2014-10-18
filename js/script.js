@@ -21,6 +21,8 @@ $(document).ready(function() {
 		this.addEventListener("click", addFavorite);
 	});
 	
+	$('#submitComment').click(createComment);
+	
 
 	$('#mainIdeaField').click(function() {
 		if ($(this).text() == 'Title') {
@@ -236,6 +238,13 @@ function createComment(avatarInfo, name, date, text) {
 	$temp.find('.info').text(date);
 	$temp.find('.commentText').text(text);
 	$temp.append('<br style="clear:both;">');
+	var ideaName = $temp.find('.title').text();
+	console.log(ideaName);
+	var idea = getIdeaByName(ideaName);
+	console.log(idea);
+	var ideaID = idea["IdeaID"];
+	
+	storeComment(name, text, ideaID);
 	return $temp;
 }
 
@@ -253,7 +262,6 @@ function createIndividualIdea(avatarInfo, user, title, description, favorites, c
 
 // Submit idea to backend
 function submitIdea() {
-	debugger;
 	var userID = ((isLoggedIn()) ? $.cookie("userID") : "Anonymous");
 	$.ajax({
 		type: "POST",
@@ -293,6 +301,23 @@ function getIdeaByTag() {
 	});
 };
 
+// Store comment in backend
+function storeComment(commenttext, username, ideaid) {
+	$.ajax({
+		type: "POST",
+		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/CreateComment",
+		data: '{"commenttext":"' + commenttext + ',"username":"' + "test1" + ',"ideaid":"' + ideaid + '"}',
+		contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (msg) {
+        	console.log("Comment succeeded");
+        },
+        error: function (msg) {
+        	console.log("Comment failed");
+        }
+	});
+};
+
 //Search for idea by author name, return a single idea
 function getIdeaByName(ideaName) {
 	console.log("Get idea by name");
@@ -306,7 +331,7 @@ function getIdeaByName(ideaName) {
         	var jsn = $.parseJSON(msg);
         	console.log(msg)
         	console.log("Search succeeded");
-        	return jsn["#text"];
+        	return jsn;
         },
         error: function (msg) {
         	console.log("Search failed");
@@ -453,7 +478,6 @@ function login() {
 	var username = $('#usernameLogIn').text();
 	var password = $('#passwordLogIn').text();
 	function callbacks(msg) {
-		debugger;
 		var username = $('#usernameLogIn').text();
 		var password = $('#passwordLogIn').text();
 		if (msg["d"] === 1) {
