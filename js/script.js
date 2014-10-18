@@ -23,7 +23,7 @@ $(document).ready(function() {
 	    submitIdea: function() {
 	    	$.ajax({
 	    		type: "POST",
-	    		url: "ideasturm.azurewebsites.net/IdeaSturm.asmx/CreateIdea",
+	    		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/CreateIdea",
 	    		data: '{ "IdeaName":"' + $('#mainIdeaField').val() + '","IdeaDate":"today"' + '"}',
 	    		contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -40,7 +40,7 @@ $(document).ready(function() {
 	    searchIdea: function() {
 	    	$.ajax({
 	    		type: "POST",
-	    		url: "ideasturm.azurewebsites.net/IdeaSturm.asmx/SearchIdeas",
+	    		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/SearchIdeas",
 	    		data: '{ "keywords":"' + $('#mainSearchField').val() +'"}',
 	    		contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -57,7 +57,7 @@ $(document).ready(function() {
 	    getAllIdeas: function() {
 	    	$.ajax({
 	    		type: "POST",
-	    		url: "ideasturm.azurewebsites.net/IdeaSturm.asmx/GetAllIdeas",
+	    		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/GetAllIdeas",
 	    		data: '{ "GetIdeas":"true"}',
 	    		contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -75,7 +75,7 @@ $(document).ready(function() {
 	    	if ($.isLoggedIn()) {
 		    	$.ajax({
 		    		type: "POST",
-		    		url: "ideasturm.azurewebsites.net/IdeaSturm.asmx/Favorite",
+		    		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/Favorite",
 		    		data: '{ "IdeaName":"' +  +'"}',
 		    		contentType: "application/json; charset=utf-8",
 	                dataType: "json",
@@ -96,7 +96,7 @@ $(document).ready(function() {
 	    	if ($.isLoggedIn()) {
 		    	$.ajax({
 		    		type: "POST",
-		    		url: "ideasturm.azurewebsites.net/IdeaSturm.asmx/GetFavorites",
+		    		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/GetFavorites",
 		    		data: '{ "user":"' +  +'"}',
 		    		contentType: "application/json; charset=utf-8",
 	                dataType: "json",
@@ -114,16 +114,39 @@ $(document).ready(function() {
 	    
 	    // Log a user in, extremely securely ;)
 	    login: function() {
-	    	
+	    	var username = $('#username').val();
+	    	if (username != '' && $('#password') != '') {
+	    		if ($('').passwordValid($('password'))) {
+	    			$.cookie("loginStatus", username);
+	    		} else {
+	    			alert("Incorrect username/password");
+	    		}
+	    		
+	    	}
+	    },
+	    
+	    // Validate password with backend
+	    passwordValid: function(pwrd) {
+	    	return true;
+	    },
+	    
+	    // Log a user out
+	    logout: function() {
+	    	$.removeCookie("loginStatus"); // foolproof
 	    },
 	    
 	    // Returns true if user is logged in, false otherwise
 	    isLoggedIn: function() {
-	    	
+	    	if ($.cookie("loginStatus") != null) {
+	    		return true;
+	    	}
+	    	return false;
 	    }
 	});
 	
 	$("#mainIdeaButton").click($('').submitIdea());
+	$('#loginButton').login();
+	$('#logoutButton').logout();
 	
 });
 
