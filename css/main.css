@@ -58,7 +58,7 @@ body {
 }
 
 #blurb {
-	padding-top: 17%;
+	padding-top: 15%;
 	width: 70%;
 	margin-left: auto;
 	margin-right: auto;
@@ -83,4 +83,34 @@ body {
 #mainSubmitButton {
 	background-color: rgba(26, 26, 26, 0.7);
 	padding: 5px 10px;
+}
+
+.ideaBoxTemplate {
+	background-color: white;
+	color: #222;
+	padding: 7px;
+	width: 350px;
+	font-size: 18px;
+	line-height: 20px;
+	text-align: center;
+	margin: 10px;
+	display: inline-block;
+}
+
+.ideaBoxTemplate p {
+	margin: 0;
+}
+
+.ideaBoxTemplate .author, .ideaBoxTemplate .stats, .ideaBoxTemplate a {
+	font-size: 14px;
+	color: #888 !important;
+}
+
+.ideaBoxTemplate hr {
+	width: 60%;
+}
+
+.ideaBoxTemplate .favorites, .ideaBoxTemplate .comments, .ideaBoxTemplate .implementations {
+	padding-left: 3px;
+	padding-right: 20px;
 }
