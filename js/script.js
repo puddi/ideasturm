@@ -1,8 +1,10 @@
-$.ready(function() {
+$(document).ready(function() {
 	$('#content').css({
-		'width': '100%';
-		'height': '100%';
-		'background-image': 'url(../assets/home.jpg)';
-		'background-size': 'cover';
+		'background-image': 'url(assets/home.jpg)',
+		'background-size': 'cover',
 	});
+	/* $('#content').append($('<div id="blurb">').append(
+			$('<p>').text("Ideas are awesome. Share yours with the world.")
+		)
+	); */
 })
