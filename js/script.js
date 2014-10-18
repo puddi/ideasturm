@@ -11,13 +11,8 @@ $(document).ready(function() {
 	$("#mainSubmitButton").click(submitIdea);
 	$('#logInButton').click(login);
 	$('#logOutButton').click(logout);
-<<<<<<< HEAD
 	loadSubmit();
-=======
-<<<<<<< HEAD
 
-	
-=======
 	$('#mainIdeaField').click(function() {
 		if ($(this).text() == 'Title') {
 			$(this).text('');
@@ -33,14 +28,6 @@ $(document).ready(function() {
 			$(this).text('');
 		}
 	});
-
-
->>>>>>> d3308d130f3ec7da345137c75398e294e7864633
->>>>>>> a78013d99c3f534437807ec7f637a153979da812
-	/* $('#content').append($('<div id="blurb">').append(
-			$('<p>').text("Ideas are awesome. Share yours with the world.")
-		)
-	); */
 });
 
 var $pastState;
