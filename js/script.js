@@ -17,6 +17,11 @@ $(document).ready(function() {
 	$('#doLogInButton').click(login);
 	$('#logOutButton').click(logout);
 	$('#doSignUpButton').click(signup);
+	$('.fave').each(function() {
+		this.addEventListener("click", addFavorite);
+	});
+	
+//	getFavoritesForUser();
 
 	$('#mainIdeaField').click(function() {
 		if ($(this).text() == 'Title') {
@@ -122,15 +127,20 @@ function loadBrowse() {
 		$results = $('<div id="browse">').css('text-align', 'center');
 		$results.append($('<div id="browseFilters">').html('<div id="searchTags" contenteditable="true">Search by Keyword or Hashtag</div><div id="searchAuthor" contenteditable="true">Search by Idea Creator</div><div id="sortSearch" onclick="getIdeaByTag"><a href="#" id="sortIdeasButton">Sort by <span id="sortingMetric">time</a> <i class="fa fa-arrow-down"></i></a><ul><li>favorites</li><li>time</li><li>comments</li></ul></div><div id="filterSearch"><a href="#">Filter</a></div>'));
 		$tiles = $('<div id="browseIdeas">');
-		getAllIdeas();
-		for (var i = 0; i < 20; ++i) {
-			$res = createBox(i, i, i, i, i);
-			$res.click(function() {
+		var ideaList = getAllIdeas();
+		console.log(ideaList);
+		
+		$.each(ideaList, function() {
+			var id = ideaList[key];
+			console.log(id);
+			$res = createBox(id["IdeaName"], id["IdeaDescription"], id["IdeaID"], id["UserName"], id["Tags"]);
+			$res.$(".IdeaBoxTemplate:not(.faves)").click(function() {
 				$pastState = $('#content').children().clone(true, true);
 				loadIndividualIdea('url(./assets/avatartest.png)', 'testname', 'testtitle', 'testdescription', 'blah');
 			})
 			$tiles.append($res);
-		}
+		});
+
 		$('#content').append($results.append($tiles)).fadeIn(300);
 		$('#searchTags').click(function() {
 			if ($(this).text() == 'Search by Keyword or Hashtag') {
@@ -180,7 +190,7 @@ var $ideaTemplate = $('<div>').addClass('ideaBoxTemplate')
 	.append($('<p>').addClass('title'))
 	.append($('<p>').addClass('author').html('by: <span></span>'))
 	.append($('<hr>'))
-	.append($('<p>').addClass('stats').html('<a href="#"><i class="fa fa-star-o"></i><span class="favorites">test</span></a> <i class="fa fa-comments"></i><span class="comments">test</span> <i class="fa fa-bolt"></i><span class="implementations">test</span>'));
+	.append($('<p>').addClass('stats').html('<a href="#" class="fave"><i class="fa fa-star-o"></i><span class="favorites">test</span></a> <i class="fa fa-comments"></i><span class="comments">test</span> <i class="fa fa-bolt"></i><span class="implementations">test</span>'));
 
 var $commentTemplate = $('<div>').addClass('comment').html('<div class="avatar"><div class="avatarDiv"></div><p class="name"></p><p class="info">on 10/10/16</p></div><div class="commentText"></div>');
 
@@ -307,7 +317,7 @@ function getIdeaByName() {
 //	});
 //};
     
-// Fetch all ideas
+// Returns array of all idea "objects"
 function getAllIdeas() {
 	$.ajax({
 		type: "POST",
@@ -317,26 +327,28 @@ function getAllIdeas() {
 		contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (msg) {
-        	console.log(msg.responseJSON);
+        	console.log($.parseJSON(msg["d"]));
         	console.log("Get all ideas succeeded");
-        	return msg.responseJSON;
+        	return $.parseJSON(msg["d"]);
         },
         error: function (msg) {
-        	console.log(msg.responseJSON);
+        	console.log(msg);
         	console.log("Get all ideas failed");
         }
 	});
 };
     
 // Mark an idea as a favorite
-function favorite() {
+function addFavorite() {
 	if (isLoggedIn()) {
+		var ideaID = $(this).parent().parent().siblings(".title").first();
+		console.log(ideaID);
     	$.ajax({
     		type: "POST",
     		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/Favorite",
-    		data: '{ "IdeaName":"' +  +'"}',
+    		data: '{ "username":"' + $.cookie("loginStatus") +'","ideaid":"' +  '"}',
     		contentType: "application/json; charset=utf-8",
-            dataType: "jsonp",
+            dataType: "json",
             success: function (msg) {
             	console.log("Favorite succeeded");
             },
@@ -349,21 +361,18 @@ function favorite() {
 	}
 };
     
-// Get a user's favorites
-function getFavorites() {
+// Returns a list of the user's favorites
+function getFavoritesForUser() {
 	if (isLoggedIn()) {
     	$.ajax({
     		type: "POST",
-    		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/GetFavorites",
-    		data: '{ "user":"' +  +'"}',
+    		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/GetFavoritesForUser",
+    		data: '{ "username":"' + $.cookie("loginStatus") +'"}',
     		contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (msg) {
-            	var xmlDoc = $.parseXML(msg);
-            	var $xml = $(xmlDoc);
-            	var faves = $.parseJSON($xml.find("anyType"));
             	console.log("Get favorites succeeded");
-            	return faves;
+            	return msg["d"];
             },
             error: function (msg) {
             	console.log("Get favorites failed");
@@ -385,16 +394,9 @@ function signup() {
 				'","email":"' + $('#emailSignUp') + '"}',
 		contentType: "application/json; charset=utf-8",
         dataType: "json",
-        success: function (msg) {
-//        	var xmlDoc = $.parseXML(msg);
-//        	var $xml = $(xmlDoc);
-//        	console.log($xml);
-//        	var success = $xml.find("int");
-        	//console.log(success);
-        	var int = $.parseJSON()["d"];
-        	console.log(int);
-        	if (success === 1) {
-        		$.cookie("loginStatus", username);
+        success: function (msg) {;
+        	if (msg["d"] === 1) {
+        		$.cookie("loginStatus", $('#usernameSignUp').text());
 	        	console.log("Sign up succeeded");
         	} else {
         		console.log("Request succeeded, sign up failed");
@@ -421,20 +423,17 @@ function login() {
 			contentType: "application/json; charset=utf-8",
 	        dataType: "json",
 	        success: function (msg) {
-	        	var xmlDoc = $.parseXML(msg);
-	        	var $xml = $(xmlDoc);
-	        	var success = $xml.find("int");
-	        	if (success === 1) {
+	        	if (msg["d"] === 1) {
 	        		$.cookie("loginStatus", username);
+	        		$('#ulNav li').toggleClass('noShow');
 		        	console.log("Log in succeeded");
 	        	} else {
 	        		console.log("Request succeeded, log in failed");
 	        		alert("Invalid username or password");
 	        	}
-	        	
 	        },
 	        error: function (msg) {
-	        	console.log("Log in failed");
+	        	console.log("Log in request failed");
 	        }
 		});
 	}
@@ -444,6 +443,7 @@ function login() {
 function logout() {
 	if (isLoggedIn()) {
 		$.removeCookie("loginStatus"); // foolproof
+		$('#ulNav li').toggleClass('noShow');
 	}
 	console.log("Logged out");
 };
