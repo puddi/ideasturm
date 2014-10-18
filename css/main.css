@@ -22,11 +22,20 @@ body {
 	line-height: 60px;
 	margin: 0;
 	text-align: center;
-
 }
 
-#headNav h1:first-child span:first-child {
+#headNav h1 a {
+	margin-left: -60px;
+}
+
+#headNav span:first-child {
 	color: #88E;
+}
+
+#headNav img {
+	display: inline;
+	height: 60px;
+	float: left;
 }
 
 #ulNav {
