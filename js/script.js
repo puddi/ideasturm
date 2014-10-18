@@ -19,8 +19,8 @@ $(document).ready(function() {
 		'background-image': 'url(assets/home.jpg)',
 		'background-size': 'cover',
 	});
-	$('#blurb').append($('<div id="yadayada">').css('text-align', 'center'));
-	for (var i = 1; i < 5; i++) {
+	$('#browseIdeas').append($('<div id="yadayada">').css('text-align', 'center'));
+	for (var i = 1; i < 12; i++) {
 		$('#yadayada').append(createBox("hello", "author", "543534", "43", "99"));	
 	}
 	/* $('#content').append($('<div id="blurb">').append(
