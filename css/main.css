@@ -412,3 +412,64 @@ body {
 	padding: 1em 0;
 	color: #CCC;
 }
+
+/* Mystical Magical Browse Drop Menu CSS */
+
+#sortSearch {
+	margin: 0;
+}
+
+#sortSearch ul ul {
+	display: none;
+}
+
+#sortSearch ul li:hover > ul {
+	display: block;	
+}
+
+#sortSearch ul {
+	-webkit-padding-start: 0;
+	-webkit-margin-before: 0;
+	-webkit-margin-after: 0;
+	text-align: center;
+	list-style: none;
+	position: relative;
+	display: inline-table;
+}
+
+#sortSearch ul li ul {
+	padding: 0 ;
+}
+#sortSearch ul:after {
+	content: ""; 
+	clear: both; 
+	display: block;
+}
+
+#sortSearch ul li {
+	margin: 10px;
+}
+
+#sortSearch ul:hover {
+	background-color: #DDD;
+}
+
+
+
+#sortSearch ul ul {
+	color: black;
+	background: #DDD;
+	position: absolute;
+}
+
+
+#sortSearch ul ul li {
+	text-align: center;
+	color: #000000;
+}	
+
+#sortSearch ul ul li:hover{ 
+	background: #4b545f;
+}
+
+/* End magic that runs the drop down menu */
