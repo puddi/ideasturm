@@ -24,11 +24,13 @@ function loadBrowse() {
 		$('#content').empty();
 		// request for browse stuff here
 		// for now i just have temp data
-		$results = $('<div>').css('text-align', 'center');
+		$results = $('<div id="browse">').css('text-align', 'center');
+		$results.append($('<div id="browseFilters">').html('<h1>Choose a Category</h1><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et </p>'));
+		$tiles = $('<div id="browseIdeas">');
 		for (var i = 0; i < 5; ++i) {
-			$results.append(createBox(i, i, i, i, i));
+			$tiles.append(createBox(i, i, i, i, i));
 		}
-		$('#content').append($results).fadeIn(300);
+		$('#content').append($results.append($tiles)).fadeIn(300);
 	});
 }
 
