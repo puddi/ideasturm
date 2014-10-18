@@ -131,14 +131,16 @@ function loadBrowse() {
 		function process(ideaList) {
 			for (var i = 0; i < ideaList.length; i++) {
 				var id = ideaList[i];
+				console.log(id);
+				console.log($.cookie("loginStatus"));
 				$res = createBox(id["IdeaName"], id["IdeaDescription"], id["IdeaID"], id["UserName"], id["Tags"]);
 				$res.data('id', id['IdeaID']);
 				$res.children().not("p.stats").click(function() {
 					$pastState = $('#content').children().clone(true, true);
-					loadIndividualIdea('url(./assets/avatartest.png)', 'testname', 'testtitle', 'testdescription', 45, 'blah');
+					loadIndividualIdea('url(./assets/avatartest.png)', 'Bob', id["IdeaName"], id["IdeaDescription"], 45, 'blah');
 				})
 				$res.children().find('.fa').click(function() {
-					addFavorite(id['IdeaName']); // returns the id of the idea
+					addFavorite(id['IdeaID']); // returns the id of the idea
 				});
 				$tiles.append($res);
 			}
@@ -275,7 +277,6 @@ function submitIdea() {
 function getIdeaByTag() {
 	console.log("Get idea by tag");
 	var tags = $('#searchTags').val().split(' ').toString();
-	console.log(tags);
 	$.ajax({
 		type: "POST",
 		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/SearchIdeas",
@@ -283,7 +284,9 @@ function getIdeaByTag() {
 		contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (msg) {
+        	var jsn = $.parseJSON(msg);
         	console.log("Search succeeded");
+        	return jsn;
         },
         error: function (msg) {
         	console.log("Search failed");
@@ -292,21 +295,19 @@ function getIdeaByTag() {
 };
 
 //Search for idea by author name, return a single idea
-function getIdeaByName() {
+function getIdeaByName(ideaName) {
 	console.log("Get idea by name");
-	var name = $('#searchTags').val();
-	console.log(name);
 	$.ajax({
 		type: "POST",
 		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/SearchIdeas",
-		data: '{"name":"' + name + '"}',
+		data: '{"name":"' + ideaName + '"}',
 		contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (msg) {
-        	var json = $.parseJSON(msg);
+        	var jsn = $.parseJSON(msg);
         	console.log(msg)
         	console.log("Search succeeded");
-        	return json["#text"];
+        	return jsn["#text"];
         },
         error: function (msg) {
         	console.log("Search failed");
@@ -356,10 +357,12 @@ function getAllIdeas(callback) {
 function addFavorite(ideaID) {
 	if (isLoggedIn()) {
 		console.log(ideaID);
+		console.log($.cookie("loginStatus"));
+		var usernm = "test1"; // hardcoded username
     	$.ajax({
     		type: "POST",
     		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/Favorite",
-    		data: '{ "username":"' + $.cookie("loginStatus") +'","ideaid":"' + ideaID + '"}',
+    		data: '{ "username":"' + usernm +'","ideaid":"' + ideaID + '"}',
     		contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (msg) {
@@ -450,6 +453,20 @@ function login() {
 	console.log("login");
 	var username = $('#usernameLogIn').text();
 	var password = $('#passwordLogIn').text();
+	function callbacks(msg) {
+		debugger;
+		var username = $('#usernameLogIn').text();
+		var password = $('#passwordLogIn').text();
+		if (msg["d"] === 1) {
+    		$.cookie("loginStatus", username);
+    		console.log($.cookie("loginStatus"));
+    		$('#ulNav li').toggleClass('noShow');
+        	console.log("Log in succeeded");
+    	} else {
+    		console.log("Request succeeded, log in failed");
+    		alert("Invalid username or password");
+    	}
+	};
 	console.log(username + ", " + password);
 	if (username != null && password != null) {
 		$.ajax({
@@ -459,14 +476,7 @@ function login() {
 			contentType: "application/json; charset=utf-8",
 	        dataType: "json",
 	        success: function (msg) {
-	        	if (msg["d"] === 1) {
-	        		$.cookie("loginStatus", username);
-	        		$('#ulNav li').toggleClass('noShow');
-		        	console.log("Log in succeeded");
-	        	} else {
-	        		console.log("Request succeeded, log in failed");
-	        		alert("Invalid username or password");
-	        	}
+	        	callbacks(msg);
 	        },
 	        error: function (msg) {
 	        	console.log("Log in request failed");
@@ -487,9 +497,11 @@ function logout() {
 // Returns true if user is logged in, false otherwise
 function isLoggedIn() {
 	return true;
-	if ($.cookie("loginStatus") != null) {
+	if ($.cookie("loginStatus") !== undefined) {
+		console.log("true");
 		return true;
 	}
+	console.log("false");
 	return false;
 };
 
