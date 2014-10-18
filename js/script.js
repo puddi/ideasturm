@@ -127,49 +127,52 @@ function loadBrowse() {
 		$results = $('<div id="browse">').css('text-align', 'center');
 		$results.append($('<div id="browseFilters">').html('<div id="searchTags" contenteditable="true">Search by Keyword or Hashtag</div><div id="searchAuthor" contenteditable="true">Search by Idea Creator</div><div id="sortSearch" onclick="getIdeaByTag"><a href="#" id="sortIdeasButton">Sort by <span id="sortingMetric">time</a> <i class="fa fa-arrow-down"></i></a></div><div id="filterSearch"><a href="#">Filter</a></div>'));
 		$tiles = $('<div id="browseIdeas">');
-		var ideaList = getAllIdeas();
-		console.log(ideaList);
-		
-		$.each(ideaList, function() {
-			var id = ideaList[key];
-			console.log(id);
-			$res = createBox(id["IdeaName"], id["IdeaDescription"], id["IdeaID"], id["UserName"], id["Tags"]);
-			$res.$(".IdeaBoxTemplate:not(.faves)").click(function() {
-				$pastState = $('#content').children().clone(true, true);
-				loadIndividualIdea('url(./assets/avatartest.png)', 'testname', 'testtitle', 'testdescription', 45, 'blah');
-			})
-			$tiles.append($res);
-		});
+		var ideaList = getAllIdeas(process);
+		function process(ideaList) {
+			for (var i = 0; i < ideaList.length; i++) {
+				var id = ideaList[i];
+				$res = createBox(id["IdeaName"], id["IdeaDescription"], id["IdeaID"], id["UserName"], id["Tags"]);
+				$res.data('id', id['IdeaID']);
+				$res.children().not("p.stats").click(function() {
+					$pastState = $('#content').children().clone(true, true);
+					loadIndividualIdea('url(./assets/avatartest.png)', 'testname', 'testtitle', 'testdescription', 45, 'blah');
+				})
+				$res.children().find('.fa').click(function() {
+					addFavorite(id['IdeaName']); // returns the id of the idea
+				});
+				$tiles.append($res);
+			}
 
-		$('#content').append($results.append($tiles)).fadeIn(300);
-		$('#searchTags').click(function() {
-			if ($(this).text() == 'Search by Keyword or Hashtag') {
-				$(this).text('');
-			}
-		});
-		$('#searchAuthor').click(function() {
-			if ($(this).text() == 'Search by Idea Creator') {
-				$(this).text('');
-			}
-		});
-		$('#sortSearch').click(function() {
-			if ($('#sortingMetric').text() == 'time') {
-				$('#sortingMetric').text('favorites');
-			} else if ($('#sortingMetric').text() == 'favorites') {
-				$('#sortingMetric').text('comments');
-			} else if ($('#sortingMetric').text() == 'comments') {
-				$('#sortingMetric').text('time');
-			}
-		});
-		$('#sortSearch li').click(function() {
-			$('#sortingMetric').text($(this).text());
-		});
-		$('#browseFilters').keypress(function(event) {
-			var keycode = (event.keyCode ? event.keyCode : event.which);
-			if(keycode == '13') {
-				event.preventDefault();
-			}
-		});
+			$('#content').append($results.append($tiles)).fadeIn(300);
+			$('#searchTags').click(function() {
+				if ($(this).text() == 'Search by Keyword or Hashtag') {
+					$(this).text('');
+				}
+			});
+			$('#searchAuthor').click(function() {
+				if ($(this).text() == 'Search by Idea Creator') {
+					$(this).text('');
+				}
+			});
+			$('#sortSearch').click(function() {
+				if ($('#sortingMetric').text() == 'time') {
+					$('#sortingMetric').text('favorites');
+				} else if ($('#sortingMetric').text() == 'favorites') {
+					$('#sortingMetric').text('comments');
+				} else if ($('#sortingMetric').text() == 'comments') {
+					$('#sortingMetric').text('time');
+				}
+			});
+			$('#sortSearch li').click(function() {
+				$('#sortingMetric').text($(this).text());
+			});
+			$('#browseFilters').keypress(function(event) {
+				var keycode = (event.keyCode ? event.keyCode : event.which);
+				if(keycode == '13') {
+					event.preventDefault();
+				}
+			});	
+		}
 	});
 }
 
@@ -300,9 +303,8 @@ function getIdeaByName() {
 		contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (msg) {
-        	var xmlDoc = $.parseXML($.ajax.getResponse());
-        	var $xml = $(xmlDoc);
-        	var json = $.parseJSON($xml.find("anyType"));
+        	var json = $.parseJSON(msg);
+        	console.log(msg)
         	console.log("Search succeeded");
         	return json["#text"];
         },
@@ -330,7 +332,7 @@ function getIdeaByName() {
 //};
     
 // Returns array of all idea "objects"
-function getAllIdeas() {
+function getAllIdeas(callback) {
 	$.ajax({
 		type: "POST",
 		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/GetAllIdeas",
@@ -341,7 +343,7 @@ function getAllIdeas() {
         success: function (msg) {
         	var temp = $.parseJSON(msg["d"]);
         	console.log("Get all ideas succeeded");
-        	return temp;
+        	callback(temp);
         },
         error: function (msg) {
         	console.log(msg);
@@ -351,7 +353,29 @@ function getAllIdeas() {
 };
     
 // Mark an idea as a favorite
-function addFavorite() {
+function addFavorite(ideaID) {
+	if (isLoggedIn()) {
+		console.log(ideaID);
+    	$.ajax({
+    		type: "POST",
+    		url: "http://ideasturm.azurewebsites.net/IdeaSturm.asmx/Favorite",
+    		data: '{ "username":"' + $.cookie("loginStatus") +'","ideaid":"' + ideaID + '"}',
+    		contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (msg) {
+            	console.log("Favorite succeeded");
+            },
+            error: function (msg) {
+            	console.log("Favorite failed");
+            }
+    	});
+	} else {
+		alert("You must log in to favorite this.");
+	}
+};
+
+//Mark an idea as a favorite
+function removeFavorite() {
 	if (isLoggedIn()) {
 		var ideaID = $(this).parent().parent().siblings(".title").first();
 		console.log(ideaID);
@@ -362,10 +386,10 @@ function addFavorite() {
     		contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (msg) {
-            	console.log("Favorite succeeded");
+            	console.log("Favorite delete successful");
             },
             error: function (msg) {
-            	console.log("Favorite failed");
+            	console.log("Favorite delete failed");
             }
     	});
 	} else {
