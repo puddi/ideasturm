@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	if ($.cookie('loginID') == undefined) {
+	if (isLoggedIn()) {
 		$('#ulNav li').toggleClass('noShow')
 	}
 	
@@ -11,23 +11,50 @@ $(document).ready(function() {
 	$("#mainSubmitButton").click(submitIdea);
 	$('#logInButton').click(login);
 	$('#logOutButton').click(logout);
+	$('#signUpButton').click(function() {
+		$('#login').slideUp(400, function() {
+			if ($('#signUp').css('display') == 'none') {
+				$('#signUp').slideDown();
+				$('#usernameSignUp').click(function() {
+					if ($(this).text() == 'username') {
+						$(this).text('');
+					}
+				});
+				$('#emailSignUp').click(function() {
+					if ($(this).text() == 'email') {
+						$(this).text('');
+					}
+				});
+				$('#passwordSignUp').click(function() {
+					if ($(this).text() == 'password') {
+						$(this).text('');
+					}
+				});
+			} else {
+				$('#signUp').slideUp();
+			}
+		});
+	});
+	$('#loginButton').click(function() {
+		$('#signUp').slideUp(400, function() {	
+			if ($('#login').css('display') == 'none') {
+				$('#login').slideDown();
+				$('#usernameLogin').click(function() {
+					if ($(this).text() == 'username') {
+						$(this).text('');
+					}
+				});
+				$('#passwordLogin').click(function() {
+					if ($(this).text() == 'password') {
+						$(this).text('');
+					}
+				});
+			} else {
+				$('#login').slideUp();
+			}
+		});	
+	});
 	loadSubmit();
-
-	$('#mainIdeaField').click(function() {
-		if ($(this).text() == 'Title') {
-			$(this).text('');
-		}
-	});
-	$('#mainIdeaFieldDescription').click(function() {
-		if ($(this).text() == 'Description') {
-			$(this).text('');
-		}
-	});
-	$('#mainIdeaFieldTags').click(function() {
-		if ($(this).text() == 'Tags, comma-separated') {
-			$(this).text('');
-		}
-	});
 });
 
 var $pastState;
